@@ -54,7 +54,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "cms.context_processors.media",
 )
 
-INTERNAL_IPS = ('127.0.0.1','89.151.221.9')
+INTERNAL_IPS = ('127.0.0.1', )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -74,7 +74,7 @@ ROOT_URLCONF = 'simple.urls'
 
 INSTALLED_APPS = (
     'haystack',
-    'staticfiles',
+    
     'djangocms_utils',
     'simple',
     'django.contrib.humanize',
@@ -83,6 +83,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
+    'django.contrib.staticfiles',
     'cms',
     'menus',
     'cms.plugins.text',

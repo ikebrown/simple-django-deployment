@@ -1,5 +1,4 @@
 Django==1.3
-django-staticfiles
 PIL
 South
 django-reversion==1.4
