@@ -10,12 +10,13 @@ django-mptt==0.4.2
 -e git+http://github.com/fivethreeo/cmsplugin-blog.git#egg=cmsplugin_blog
 -e git+http://github.com/fivethreeo/django-cms-facetsearch.git#egg=django-cms-facetsearch
 -e git+http://github.com/fivethreeo/cmsplugin-blog-search.git#egg=cmsplugin-blog-search
+-e git+https://github.com/toastdriven/django-haystack.git#egg=django-haystack
+-e git+https://github.com/toastdriven/pyelasticsearch.git#egg=pyelasticsearch
 django-filer
 django-cbv
 django-pagination
 django-tagging
 django-tinymce
-django-haystack
 django-celery==2.2.7
 python-memcached
 cmsplugin-filer==0.8.0
@@ -25,7 +26,6 @@ psycopg2
 xlwt
 xlrd
 gdata
-pysolr
 django-rosetta
 celery-haystack
 BeautifulSoup==3.2.0
