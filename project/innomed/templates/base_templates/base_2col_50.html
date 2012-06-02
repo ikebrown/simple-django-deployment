@@ -1,0 +1,10 @@
+{% extends "base_templates/base_2col.html" %}
+
+{% load cms_tags %}
+
+{% block cols %}
+    <div class="page-col1-50">{% block left-col %}{% placeholder "main" %}{% endblock left-col %}</div>
+    <div class="page-col2-50"><h1>&nbsp;</h1>
+        {% block right-col %}{% placeholder "left" %}{% endblock right-col %}
+    </div>
+{% endblock cols %}

@@ -1,0 +1,31 @@
+Django==1.3
+django-staticfiles
+PIL
+South
+django-reversion==1.4
+django-mptt==0.4.2
+-e git+http://github.com/divio/django-cms.git@develop#egg=django-cms
+-e git+http://github.com/fivethreeo/simple-translation#egg=simple_translation
+-e git+http://github.com/fivethreeo/djangocms-utils#egg=djangocms_utils
+-e git+http://github.com/fivethreeo/cmsplugin-blog.git#egg=cmsplugin_blog
+-e git+http://github.com/fivethreeo/django-cms-facetsearch.git#egg=django-cms-facetsearch
+-e git+http://github.com/fivethreeo/cmsplugin-blog-search.git#egg=cmsplugin-blog-search
+django-filer
+django-cbv
+django-pagination
+django-tagging
+django-tinymce
+django-haystack
+django-celery==2.2.7
+python-memcached
+cmsplugin-filer==0.8.0
+easy-thumbnails==1.0-alpha-16
+gunicorn
+psycopg2
+xlwt
+xlrd
+gdata
+pysolr
+django-rosetta
+celery-haystack
+BeautifulSoup==3.2.0

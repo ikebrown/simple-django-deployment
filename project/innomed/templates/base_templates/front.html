@@ -1,0 +1,31 @@
+{% extends "base_templates/base_2col.html" %}
+
+{% load cms_tags %}
+{% block bodyclass %}front{% endblock bodyclass %}
+{% block top-block %}
+<div id="top-block" class="whitebg">
+    {% placeholder "top-block" %}
+</div>
+{% endblock top-block %}
+
+{% block col-wrappers %} 
+<div id="col-wrap" class="clearfix whitebg">
+    <div class="front-3cols">{% placeholder "col1" %}</div>
+    <div class="front-3cols">{% placeholder "col2" %}</div>
+    <div class="front-3cols">{% placeholder "col3" %}</div>
+</div>
+
+<div class="clearfix pad30 whitebg">
+    <div class="front-3cols">{% placeholder "col1-lnk" %}</div>
+    <div class="front-3cols">{% placeholder "col2-lnk" %}</div>
+    <div class="front-3cols">{% placeholder "col3-lnk" %}</div>
+</div>
+<div class="clearfix pad30 whitebg">
+    <div class="front-1col">{% placeholder "row2-col1" %}</div>
+</div>
+{% endblock col-wrappers %}
+
+            {% block footer %}
+                {% load analytics_counter_tags %}
+                <p class="besok">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Siden har hatt {% analytics_visits %} besøk siden 1 februar 2011.</p>
+            {% endblock footer %}

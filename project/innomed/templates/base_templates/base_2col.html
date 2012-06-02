@@ -1,0 +1,53 @@
+{% extends "base_templates/base_centered.html" %}
+{% load i18n menu_tags cms_tags %}
+
+{% block outer %}
+
+            <div id="header">
+            {% block header %}
+            <a href="/" id="logolink"></a>
+            <div id="header-right">
+                <ul id="top-links">
+                {% if request.current_page %}
+    			    {% language_chooser "native" %}
+    			{% endif %}
+    			</ul>
+    			<form id="toppsokform" method="get" action="{% page_url "sok" %}">
+                <p id="toppsok"><input type="text" name="q" value=""> <input type="submit" value="{% trans "Search" %}"></p>
+                </form>
+                <p id="toppsokavansert"><a href="{% page_url "sok" %}">Avansert søk</a></p>
+            </div>
+            {% endblock header %}
+            </div>
+
+			<ul id="menu" class="sf-menu main-menu">
+			{% show_menu 0 1 1 1 %}
+			</ul>
+
+            {% block menu %}
+            {% endblock menu %}
+            
+            {% block top-block %}
+            {% endblock top-block %}
+            
+           	{% block col-wrappers %} 
+            <div id="col-wrap" class="whitebg clearfix">
+            {% block cols %}
+                <div class="page-col1-68">{% block left-col %}{% placeholder "main" %}{% endblock left-col %}</div>
+                <div class="page-col2-29"><h1>&nbsp;</h1>
+                    {% block right-col %}{% placeholder "left" %}{% endblock right-col %}
+                </div>
+            {% endblock cols %}
+            </div>
+
+            {% block row2-cols %}
+            {% endblock row2-cols %}
+            
+            {% endblock col-wrappers %}
+
+            <div id="footer">
+            {% block footer %}
+
+            {% endblock footer %}
+            </div>
+{% endblock outer %}

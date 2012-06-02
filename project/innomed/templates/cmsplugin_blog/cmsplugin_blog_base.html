@@ -1,0 +1,15 @@
+{% extends "base_templates/base_2col_50.html" %}
+
+{% load cms_tags %}
+
+{% block top-block %}
+<div id="top-block">
+    {% show_uncached_placeholder "top-block" "prosjektoversikt" %}
+</div>
+{% endblock top-block %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/{{ request.LANGUAGE_CODE }}{% url blog_rss %}" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/{{ request.LANGUAGE_CODE }}{% url blog_rss_any %}" />
+{% endblock extrahead %}

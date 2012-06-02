@@ -1,0 +1,7 @@
+{% load i18n thumbnail djangocms_utils_tags %}
+{% spaceless %}
+
+{% with placeholder|get_placeholder_group as group %}
+<img border="0" src="{{ picture.image.url }}" {% if picture.alt %}alt="{{ picture.alt }}" usemap="#{{ picture.alt|slugify }}"{% endif %}/>
+{% endwith %}
+{% endspaceless %}
