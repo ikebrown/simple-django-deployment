@@ -181,13 +181,11 @@ def setup_all():
     add_superuser()
     setup_celery()
     setup_memcached()
+    setup_elasticsearch()
     setup_supervisord()
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
-    setup_solr()
-    solr_multicore()
-    update_solr_schema()
-    setup_postfix()
+    configure_supervisor_elasticsearch()
         
 def setup_instance():
     setup_webapp()
@@ -198,23 +196,27 @@ def setup_instance():
     syncdb()
     add_site()
     add_superuser()
-    update_solr_schema()
     configure_celery()
     configure_memcached()
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
+    configure_supervisor_elasticsearch()
     
-def setup_solr():
+def setup_elasticsearch():
     """ Setup search server """
     with settings(warn_only=True):
         sudo("aptitude update")
-        sudo("aptitude -y install python-software-properties")
-        sudo("sudo add-apt-repository \"deb http://archive.canonical.com/ lucid partner\"")
-        sudo("aptitude update")
-        sudo("aptitude -y sun-java6-jdk "
-                              "tomcat6 "
-                              "solr-tomcat")
-                              
+        put("jdk-6u31-linux-i586.bin", use_sudo=True)
+        sudo("chmod u+x jdk-6u31-linux-i586.bin")
+        sudo("./jdk-6u31-linux-i586.bin")
+        sudo("mv jdk1.6.0_31 /usr/lib/jvm/")
+        sudo('sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.6.0_31/bin/java" 1')
+        run("wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.2.tar.gz -O elasticsearch.tar.gz")
+        sudo("tar -xf elasticsearch.tar.gz")
+        sudo("rm elasticsearch.tar.gz")
+        sudo("mv elasticsearch-* elasticsearch")
+        sudo("mv elasticsearch /usr/local/share")
+        
 def setup_libreoffice():
     with settings(warn_only=True):
         sudo("aptitude update")
@@ -222,74 +224,6 @@ def setup_libreoffice():
         sudo("sudo add-apt-repository ppa:libreoffice/ppa")
         sudo("aptitude update")
         sudo("aptitude -y install libreoffice-calc")
-
-def solr_multicore():
-    if not files.exists('/etc/solr/oldconf'):
-        sudo("cp -Rp /etc/solr/conf /etc/solr/oldconf")
-        sudo("rm -rf /etc/solr/conf")
-        sudo("rm -rf /var/lib/solr/data")
-        sudo("chown -R tomcat6:tomcat6 /etc/solr")
-    cores = env.solr_cores.split(',')
-    for core in cores:
-        if not files.exists("/etc/solr/conf-%s" % core):
-            sudo("cp -Rp /etc/solr/oldconf /etc/solr/conf-%s" % core)
-            sudo("mkdir /usr/share/solr/%s" % core)
-            sudo("ln -s /etc/solr/conf-%s /usr/share/solr/%s/conf" % (core,core))
-            files.sed("/etc/solr/conf-%s/solrconfig.xml" % core, "/var/lib/solr/data", "/var/lib/solr/%s/data" % core, use_sudo=True)
-    files.upload_template("solr/solr.xml", "/usr/share/solr/solr.xml", context={'cores': cores}, use_jinja=True, use_sudo=True)
-    restart_tomcat() # restart but conf will be borked until you update_solr_schema() for each core
-
-def update_solr_schema():
-    run(create_manage_command("build_solr_schema > /home/%(user)s/schema.xml" % env))
-    sudo("cp /home/%(user)s/schema.xml /etc/solr/conf-%(solr_core)s/schema.xml" % env)
-    restart_tomcat()
-    
-def restart_tomcat():
-    sudo("invoke-rc.d tomcat6 restart")
-
-def setup_postfix():
-    
-    sudo("echo %(project_name)s  > /etc/mailname" % env)
-    files.upload_template("postfix/main.cf", "/etc/postfix/main.cf" % env, use_sudo=True, context=env)    
-    
-    sudo("aptitude update")
-    sudo("DEBIAN_FRONTEND='noninteractive' aptitude -y -q --force-yes install postfix postfix-tls postfix-pgsql "
-                            "dovecot-imapd dovecot-pop3d dovecot-common "
-                            "amavisd-new spamassassin clamav-daemon "
-                            "libnet-dns-perl libmail-spf-query-perl pyzor razor "
-                            "arj bzip2 cabextract cpio file gzip lha nomarch pax rar unrar unzip unzoo zip zoo")
-                                
-    sudo("adduser clamav amavis")
-    sudo("adduser amavis clamav")
-    sudo("groupadd vmail")
-    sudo("useradd -g vmail -s /bin/false -d /home/vmail vmail")
-    sudo("mkdir /home/vmail")
-    sudo("chown vmail:vmail /home/vmail")    
-    sudo("groupadd spamd")
-    sudo("useradd -g spamd -s /bin/false -d /var/log/spamassassin spamd")
-    sudo("mkdir /var/log/spamassassin")
-    sudo("chown spamd:spamd /var/log/spamassassin")
-    configure_postfix()
-    
-def configure_postfix():
-
-    sudo("postconf -e \"content_filter = smtp-amavis:[127.0.0.1]:10024\"")
-    files.upload_template("postfix/master.cf", "/etc/postfix/master.cf" % env, use_sudo=True, context=env)    
-    files.upload_template("postfix/mailboxes.cf", "/etc/postfix/mailboxes.cf" % env, use_sudo=True, context=env)   
-    files.upload_template("postfix/transport.cf", "/etc/postfix/transport.cf" % env, use_sudo=True, context=env)   
-    files.upload_template("postfix/aliases.cf", "/etc/postfix/aliases.cf" % env, use_sudo=True, context=env)    
-    files.upload_template("postfix/dovecot.conf", "/etc/dovecot/dovecot.conf" % env, use_sudo=True, context=env)   
-    files.upload_template("postfix/dovecot-sql.conf", "/etc/dovecot/dovecot-sql.conf" % env, use_sudo=True, context=env)   
-    put("postfix/spamassassin", "/etc/default/spamassassin", use_sudo=True)
-    put("postfix/amavis.15-content_filter_mode", "/etc/amavis/conf.d/15-content_filter_mode", use_sudo=True)
-    
-    sudo("chown root:root /etc/amavis/conf.d/15-content_filter_mode")
-    sudo("invoke-rc.d dovecot stop")
-    sudo("invoke-rc.d dovecot start")
-    sudo("invoke-rc.d postfix restart")
-    sudo("invoke-rc.d spamassassin restart")
-    sudo("invoke-rc.d clamav-daemon restart")
-    sudo("invoke-rc.d amavis restart")
 
 def setup_dbserver():
     """ Setup database server with postgis_template db """
@@ -385,7 +319,14 @@ def configure_supervisor_gunicorn():
 def configure_supervisor_celeryd():
     files.upload_template("supervisor/celeryd_supervisor.conf", "/etc/supervisor/conf.d/celeryd_%(user)s.conf" % env, use_sudo=True, context=env)
     sudo("killall -HUP supervisord")
-
+    
+def configure_supervisor_elasticsearch():
+    files.upload_template("supervisor/elasticsearch_supervisor.conf", "/etc/supervisor/conf.d/elasticsearch_%(user)s.conf" % env, use_sudo=True, context=env)
+    run("mkdir -p /home/%(user)s/%(project_name)s/logs/elasticsearch" % env)
+    run("mkdir -p /home/%(user)s/%(project_name)s/data/elasticsearch" % env)
+    run("chmod u+rw /home/%(user)s/%(project_name)s/data/elasticsearch" % env)
+    sudo("killall -HUP supervisord")
+    
 def supervisorctl(cmd):
     sudo("supervisorctl %s" % cmd)
 
