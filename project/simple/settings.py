@@ -39,16 +39,16 @@ SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source'
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth",
+    "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.i18n",
     "django.core.context_processors.debug",
     "django.core.context_processors.request",
-    "staticfiles.context_processors.static",
+    "django.core.context_processors.static",
     "django.core.context_processors.media",
     "sekizai.context_processors.sekizai",
     "cms.context_processors.media",
@@ -61,13 +61,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
-    'django.contrib.csrf.middleware.CsrfMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'cms.middleware.multilingual.MultilingualURLMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
-    'simple_translation.middleware.MultilingualGenericsMiddleware',
-    'cbv.middleware.DeferredRenderingMiddleware'
+    'simple_translation.middleware.MultilingualGenericsMiddleware'
 )
 
 ROOT_URLCONF = 'simple.urls'
@@ -81,10 +80,10 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.admin',
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'cms',
+    'django.contrib.admin',
     'menus',
     'cms.plugins.text',
     'cms.plugins.link',

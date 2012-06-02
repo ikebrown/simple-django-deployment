@@ -204,7 +204,7 @@ def setup_elasticsearch():
     """ Setup search server """
     with settings(warn_only=True):
         sudo("aptitude update")
-        sudo('sudo apt-get install java')
+        sudo('aptitude -y install  install openjdk-6-jre')
         run("wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.2.tar.gz -O elasticsearch.tar.gz")
         sudo("tar -xf elasticsearch.tar.gz")
         sudo("rm elasticsearch.tar.gz")

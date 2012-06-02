@@ -5,7 +5,7 @@ extra_paths = ':'.join([
 ])
 global_settings = [
     ('postgres_logging', False),
-    ('django_debug', False),
+    ('django_debug', True),
     ('project_name', 'simple'),
     ('db_user', 'simple'),
     ('db_password', 'example123'),
