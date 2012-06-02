@@ -112,11 +112,11 @@ def deploy_project():
 def push_project():
     """ Push out new code to the server """
     with settings(warn_only=True):
-        local('tar -czf innomed_deployment.tar.gz . --exclude "innomed_deployment.tar.gz"')
+        local('tar -czf innomed_deployment.tar.gz . --exclude "%(project_name)s.tar.gz"' %  env)
         run("mkdir /home/%(user)s/tmp" % env)
         put("innomed_deployment.tar.gz", "/home/%(user)s/tmp" % env)
         with cd("/home/%(user)s/tmp" % env):
-            run("tar -xzf innomed_deployment.tar.gz") 
+            run("tar -xzf %(project_name)s.tar.gz" %  env) 
             run("rm -rf /home/%(user)s/%(project_name)s/project" % env)
             run("cp -rf project /home/%(user)s/%(project_name)s/project" % env)
             run("rm -rf /home/%(user)s/%(project_name)s/external_apps" % env)
@@ -126,10 +126,7 @@ def push_project():
         run("rm -rf /home/%(user)s/tmp" % env)
                      
 def push_django_settings():
-    files.upload_template("config/local_settings.py", "/home/%(user)s/%(project_name)s/project/%(project_name)s/local_settings.py" % env, context=env)
-               
-def push_wsgi():
-    files.upload_template("config/app.wsgi", "%(wsgipath)s" % env, use_sudo=True, context=env)
+    files.upload_template("config/local_settings.py", "/home/%(user)s/%(project_name)s/project/%(project_name)s/local_settings.py" % env, context=env)   
 
 def push():
     push_project()

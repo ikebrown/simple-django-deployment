@@ -34,8 +34,7 @@ group_settings = {
         'gunicorn_port': '8001',
         'gunicorn_autostart': 'true',
         'db_name': 'simple_develop',
-        'memcached_port': '11212',
-        'solr_cores': 'develop'
+        'memcached_port': '11212'
     }
     
 }

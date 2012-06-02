@@ -30,8 +30,6 @@ MEDIA_URL = '/media/media/'
 CMS_MEDIA_URL= '/media/cms/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 TINYMCE_JS_URL = '/media/tinymce/jscripts/tiny_mce/tiny_mce.js'
-TAGGING_AUTOCOMPLETE_JS_BASE_URL = '/media/autocomplete/'
-INNERFADE_MEDIA_URL = '/media/'
 JQUERY_JS = 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'
 JQUERY_UI_JS = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js'
 JQUERY_UI_CSS = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/themes/smoothness/jquery-ui.css'
@@ -42,8 +40,7 @@ SECRET_KEY = '*xq7m@)*f2awoj!spa0(jibsrz9%c0d=e(g)v*!17y(vx0ue_3'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    'django.template.loaders.app_directories.load_template_source'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -70,21 +67,16 @@ MIDDLEWARE_CLASSES = (
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
     'simple_translation.middleware.MultilingualGenericsMiddleware',
-    'moteplasser.middleware.RedirectRequestMiddleware',
     'cbv.middleware.DeferredRenderingMiddleware'
 )
 
-ROOT_URLCONF = 'innomed.urls'
+ROOT_URLCONF = 'simple.urls'
 
 INSTALLED_APPS = (
     'haystack',
     'staticfiles',
     'djangocms_utils',
-    'innomed',
-    'nyheter',
-    'moteplasser',
-    'prosjekter',
-    'cmsplugin_innerfade',
+    'simple',
     'django.contrib.humanize',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -103,8 +95,8 @@ INSTALLED_APPS = (
     'reversion',
     'pagination',
     'tinymce',
-    'cmsplugin_blog',
-    #'cmsplugin_blog_search',
+    # 'cmsplugin_blog',
+    # 'cmsplugin_blog_search',
     'simple_translation',
     'tagging',
     'filer',
@@ -115,18 +107,11 @@ INSTALLED_APPS = (
     'cmsplugin_filer_video',
     'easy_thumbnails',
     'south',
-    'analytics_counter',
     'cms_facetsearch',
-    'postfixadmin',
     'rosetta',
     'sekizai',
     'djcelery',
     'celery_haystack'
-)
-
-STATICFILES_FINDERS = (
-    'innomed.legacy_finder.LegacyAppDirectoriesFinder',
-    'staticfiles.finders.AppDirectoriesFinder'
 )
 
 gettext = lambda s: s
@@ -165,34 +150,14 @@ TINYMCE_DEFAULT_CONFIG = {
 "extended_valid_elements" : "a[href|onclick|target|class]"
 }   
 
-
-
-DJANGOCMS_UTILS_SEARCH_FACET=True
-
 FORCE_LOWERCASE_TAGS = True
-
-CMSPLUGIN_BLOG_PLACEHOLDERS = ('one','two')
-PROSJEKTER_PLACEHOLDERS = ('top', 'main', 'right', 'list')
-NYHETER_PLACEHOLDERS = ('top', 'main', 'right')
 
 from easy_thumbnails import defaults
 
 THUMBNAIL_PROCESSORS = defaults.PROCESSORS + (
     'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-    'innomed.processors.skraa_processor',
 )
 THUMBNAIL_DEBUG = True
-
-PLACEHOLDER_GROUPS = {
-    'half_width': ('main', 'pamelding_inaktiv', 'pamelding_sendt', 'for_skjema', 'etter_skjema', 'one', 'two')
-}
-
-HAYSTACK_SEARCH_ENGINE= 'solr'
-HAYSTACK_SITECONF = 'innomed.search_sites'
-
-ANALYTICS_EMAIL = 'oyvind.saltvik@gmail.com'
-ANALYTICS_PASSWORD = '826ijink'
-ANALYTICS_ID = 'ga:41310835'
 
 try:
     from local_settings import *

@@ -13,13 +13,13 @@ MEDIA_URL = '%%smedia/' %% STATIC_URL
 
 FILER_STATICMEDIA_PREFIX = '%%sfiler/' %% STATIC_URL
 
-DEFAULT_FROM_EMAIL = 'innomed@innomed.no'
+DEFAULT_FROM_EMAIL = '%(email)s'
 
 ADMINS = (
-    ('Oyvind','oyvind.saltvik@gmail.com'),
+    ('Me','%(email)s'),
 )
-MNAGERS = (
-    ('Tore','innomed@innomed.no'),
+MANAGERS = (
+    ('You','%(email)s'),
 )
 ADMIN_MEDIA_PREFIX = '%%sadmin/' %% STATIC_URL
 
@@ -49,12 +49,18 @@ CACHE_MIDDLEWARE_SECONDS = 60*5
 CACHE_MIDDLEWARE_KEY_PREFIX = '%(project_name)s.'
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 
-HAYSTACK_SOLR_URL = 'http://localhost:8080/solr/%(solr_core)s'
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'haystack'
+    }
+}
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
-EMAIL_HOST_USER = 'innomed@innomed.no'
-EMAIL_HOST_PASSWORD = 'rds81ro'
+EMAIL_HOST_USER = '%(email)s'
+EMAIL_HOST_PASSWORD = '%(db_password)s'
 EMAIL_USE_TLS = True
 
 
