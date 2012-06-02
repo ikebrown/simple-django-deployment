@@ -12,10 +12,10 @@
     			    {% language_chooser "native" %}
     			{% endif %}
     			</ul>
-    			<form id="toppsokform" method="get" action="{% page_url "sok" %}">
-                <p id="toppsok"><input type="text" name="q" value=""> <input type="submit" value="{% trans "Search" %}"></p>
+    			<form id="topsearchform" method="get" action="{% page_url "search" %}">
+                <p id="topsearch"><input type="text" name="q" value=""> <input type="submit" value="{% trans "Search" %}"></p>
                 </form>
-                <p id="toppsokavansert"><a href="{% page_url "sok" %}">Avansert søk</a></p>
+                <p id="topsearchformadvanced"><a href="{% page_url "search" %}">Advanced search</a></p>
             </div>
             {% endblock header %}
             </div>

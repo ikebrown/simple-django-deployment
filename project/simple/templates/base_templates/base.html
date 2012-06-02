@@ -2,15 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}" dir="ltr">
 {% load cms_tags sekizai_tags %}
     <head>
-        <title>{% block title %}Innomed{% endblock title %}</title>
+        <title>{% block title %}Simple{% endblock title %}</title>
          <meta http-equiv="Content-type" content="text/html;charset=UTF-8" /> 
          {% render_block "css" %} 
 {% block extrahead %}
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}innomed/fonts/stylesheet.css" />
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}innomed/base.css" />
+
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}simple/base.css" />
          
         <script type="text/javascript" src="{{ STATIC_URL }}admin/js/jquery.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}innomed/base.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}simple/base.js"></script>
 {% endblock extrahead %}
     </head>
     

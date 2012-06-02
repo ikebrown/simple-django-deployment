@@ -4,14 +4,13 @@
 
     {% block top-block %}
     <div id="top-block">
-        {% show_uncached_placeholder "top-block" "sok" %}
     </div>
     {% endblock top-block %}
 
     {% block search_form %}
 
-    <form method="get" id="sokform">
-    <p>{{ form.q }} <input type="submit" value="{% trans "Search" %}"><br />Begrens søk til: {{ form.models }} {{ form.selected_facets }}</p>
+    <form method="get" id="searchform">
+    <p>{{ form.q }} <input type="submit" value="{% trans "Search" %}"><br />Limit search to: {{ form.models }} {{ form.selected_facets }}</p>
     </form>
     
     {% endblock search_form %}

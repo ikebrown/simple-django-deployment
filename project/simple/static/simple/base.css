@@ -1,0 +1,297 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body.mceContentBody { background: #ffffff; }
+body.mceContentBody { padding-left: 10px;  }
+
+html { height: 100%; }
+
+body { height: 100%;
+ }
+
+body {
+    background: #ebeaef; background: url('bgw.jpg');
+}
+
+/* Netscape 4 safe font sizes */
+p, th, td, li, dd {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #444444;
+  font-size: 14px;
+  margin-bottom: 18px; 
+}
+p.nomargin {
+  margin-bottom: 6px; 
+}
+ul {
+    margin-top: -12px;
+    margin-bottom: 18px; 
+}
+li {
+    margin-bottom: 18px; 
+}
+li ul {
+    margin-top: 3px;
+    margin-bottom: 3px; 
+}
+
+a { color: #006699;  text-decoration:none; }
+a:hover { color: #000000;}
+a img { border: none; }
+
+
+form { margin-bottom: 18px;  }
+table { margin-bottom: 18px; border-collapse: collapse; } 
+
+ul { margin-left: 16px; }
+
+h1 {  font-size: 160%; font-family: arial; color: #0095c1; margin-bottom: 18px; font-weight: normal; line-height: 100%;}
+h2 {  font-size: 140%; font-family: arial; color: #0095c1; margin-bottom: 18px; font-weight: normal; }
+h3 { font-size: 120%; font-family: arial; color: #000000; margin-bottom: 18px; font-weight: normal; }
+h4 { font-size: 110%; font-family: arial; font-weight: bold; color: #000000;  margin-bottom: 18px; }
+
+th, td { padding: 2px; }
+th { text-align: left; }
+td { vertical-align: top;  }
+
+* html #outer { height: 100%; }
+
+#outer {  min-height: 100% ! important;width: 940px; margin: 0 auto; padding: 0 15px; background: url('shadow.png') top left repeat-y; padding-bottom: 15px; }
+body>#outer {  overflow:hidden; }
+#header { width: 940px; height: 100px; background: url('logo.jpg') #ffffff 30px 25px no-repeat; }
+#col-wrap { clear: both; padding: 0 30px; }
+#right-col {  width: 765px; float: right; padding-right: 15px; }
+#main-col { width: 420px; float: left; }
+
+/*
+#shadowwrap { min-height: 100%; width: 940px; padding-right: 10px; background: url('rightsideshadow.png') top right repeat-y; }
+#shadowbottom { display: none; width: 950px; }
+#shadowleft { width: 10px; height: 10px; margin: 0; padding: 0; position: relative; left: 0px; background: url('leftbottomshadow.png') top left no-repeat;  }
+#shadowmiddle{ width: 930px; height: 10px; margin: 0; padding: 0; position: relative; left: 10px; background: url('bottomshadow.png') top right repeat-x; }
+#shadowright { width: 10px; height: 10px; margin: 0; padding: 0; position: relative; left: 930px; background: url('rightbottomshadow.png') top left no-repeat;  }
+        <div id="outer">
+            <div id="shadowwrap">
+        {% block outer %}{% endblock outer %}
+            </div>
+            <div id="shadowbottom">
+                <div id="shadowleft"><div>
+                <div id="shadowmiddle"><div>
+                <div id="shadowright"><div>
+            </div>
+        </div>
+*/
+
+.main-left { width: 270px; float: left; }
+.main-right { width: 270px; float: right; }
+
+#side-col { width: 195px; float: right; }
+#left-col { width: 180px; float: left; padding: 15px; }
+
+a#logolink { height: 100px; width: 280px; float: left; }
+
+ul.main-menu { display: block;  padding: 0px 30px; margin: 0px; height: 3em;background: #ffffff; }
+
+ul.main-menu li { list-style-type: none; float: left;  margin: 0; }
+
+ul.main-menu li ul { margin-left: 1px; position: absolute; width: 150px; visibility: hidden; height: auto; background: #ffffff; opacity: 0.7; alpha: opacity(70); }
+
+ul.main-menu li a { padding:6px; font-family: 'CambriaRegular', Georgia, serif; display:block; text-decoration:none; font-size: 1.10em;  font-weight: bold; color: #58595b; }
+ul.main-menu li.selected a {  color: #f15a29; }
+ul.main-menu li a:hover {  text-decoration:none;  color: #f15a29;}
+ul.main-menu li.selected li a { color: #58595b}
+ul.main-menu li li.selected a { color: #f15a29; }
+ul.main-menu li.selected li a:hover { color: #f15a29; }
+ul.main-menu li.selected li.selected a { color: #f15a29; }
+
+
+#top-block { padding-bottom: 20px;}
+
+#header-right { float: right; margin: 0; padding: 20px 20px 0px 0px; }
+
+#top-links{ }
+
+#top-links li { text-align: right; margin: 2px; padding: 0; list-style-type: none;}
+#top-links li a { font-family: 'CambriaBold', Georgia, serif; text-decoration:none;  color: #58595b; }
+#top-links li a:hover {  text-decoration:underline;  }
+
+#topsearchformadvanced { text-align: right;  margin: 2px;  }
+#topsearchformadvanced a { font-family: 'CambriaRegular', Georgia, serif; text-decoration:none; }
+#topsearchform { text-align: right; margin: 0; padding: 0; }
+#topsearch{ margin: 2px; padding: 0; }
+#searchform ul { list-style-type: none; margin-left: 0; padding: 0; }
+#searchform ul li { margin-bottom: 2px;  padding: 0; }
+
+#lang-menu { display: block;  padding: 0px 30px; float: right; }
+#lang-menu a { padding:8px; display:block; text-decoration:none; float: left; font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+#lang-menu a.current { text-decoration:underline; }
+
+.whitebg { background: #ffffff; }
+.pad30 { padding: 0 30px;  }
+.pad { padding-top: 30px; }
+.front-3cols { width: 31%; float: left; margin-right: 13px;  }
+.front-3cols ul { list-style-type: none; margin: 0; padding: 0; }
+.front-3cols li { margin: 2px; padding: 0; list-style-type: none; }
+
+.front-2cols { width: 413px; float: left; margin-right: 13px; min-height: 100px; }
+
+.front-1col { width: 826px; float: left; margin-right: 13px; }
+.page-col1-68 { width: 66%; float: left; margin-right: 43px; min-height: 100px; }
+.page-col2-29 { width: 27%; float: left; margin-right: 13px; min-height: 100px; }
+
+.page-col1-50 { width: 46%; float: left; margin-right: 43px; min-height: 100px; }
+.page-col2-50 { width: 46%; float: left; margin-right: 13px; min-height: 100px; }
+
+.pagination {
+    clear:both;
+    display: block;
+    width:100%;
+    float: none;
+    padding: 1em;
+}
+
+.pagination ul {
+    margin: 0;
+    padding: 0;
+    text-align: left; 
+    font-size: 12px;
+}
+
+.pagination li {
+    list-style-type: none;
+    display: inline;
+    padding-bottom: 1px;
+}
+
+.pagination a, .pagination a:visited {
+    padding: 0 5px;
+    text-decoration: none; 
+}
+
+.pagination li.currentpage {
+    font-weight: bold;
+    padding: 0 5px;
+}
+
+dl.horizontal { 
+    padding: 0.5em;
+} 
+
+dl.horizontal dt { 
+    float: left;
+    clear: left;
+    width: 150px;
+    font-weight: bold;
+    }
+dl.horizontal dd {
+    margin: 0 0 0 155px; 
+    padding: 0 0 0.5em 0;
+}
+
+dl.horizontal dt.cleared, dl.horizontal dd.cleared { clear: both; width: 100%; margin: 0; text-align: center; }
+
+form dl, form table { 
+    padding: 0em;
+}
+    
+form dl dt, form table tbody tr th {
+    vertical-align: top;
+    padding: 0 0 0em 0.3em;
+    font-weight: bold;
+    font-size: 80%; font-family: arial; 
+    }
+form dl dd, form table tbody tr td {
+    padding: 0 0 0em 0.3em;
+}
+
+form table tbody tr td, form table tbody tr th { padding-top: 0.3em; border-top: solid 2px white; }
+form table tbody tr.skille td, form table tbody tr.skille th { border-top: solid 3px #00ff00;; }
+
+form dl dt.cleared, dl dd.cleared { clear: both; width: 100%; margin: 0; text-align: center; }
+
+form dl dd ul, form table tbody tr td ul { margin-top: 0.2em; }
+form dl dd p, form table tbody tr td p { margin-bottom: 0em; }
+
+form dl dd ul li, form table tbody tr td li { color: #ff0000; }
+form dl dd ul li, form table tbody tr td li, form dl dd p, form table tbody tr td p { font-size: 90%; font-family: arial;  }
+form dl dt.errors, dl dd.errors, form table tbody tr td.errors, form table tbody tr th.errors { background: #ffcccc; }
+
+
+.clearfix:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+.clearfix { display: inline-block; }
+
+/* Hides from IE-mac \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* End hide from IE-mac */om IE-mac */
+
+/*** ESSENTIAL STYLES ***/
+.sf-menu, .sf-menu * {
+	margin:			0;
+	padding:		0;
+	list-style:		none;
+}
+.sf-menu {
+	line-height:	1.0;
+}
+.sf-menu ul {
+	position:		absolute;
+	top:			-999em;
+	width:			10em; /* left offset of submenus need to match (see below) */
+}
+.sf-menu ul li {
+	width:			100%;
+}
+.sf-menu li:hover {
+	visibility:		inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu li {
+	float:			left;
+	position:		relative;
+}
+.sf-menu a {
+	display:		block;
+	position:		relative;
+}
+.sf-menu li:hover ul,
+.sf-menu li.sfHover ul {
+	left:			0;
+	top:			2.5em; /* match top ul list item height */
+	z-index:		99;
+}
+ul.sf-menu li:hover li ul,
+ul.sf-menu li.sfHover li ul {
+	top:			-999em;
+}
+ul.sf-menu li li:hover ul,
+ul.sf-menu li li.sfHover ul {
+	left:			10em; /* match ul width */
+	top:			0;
+}
+ul.sf-menu li li:hover li ul,
+ul.sf-menu li li.sfHover li ul {
+	top:			-999em;
+}
+ul.sf-menu li li li:hover ul,
+ul.sf-menu li li li.sfHover ul {
+	left:			10em; /* match ul width */
+	top:			0;
+}
+
+span.file { display: block; clear: both; font-family: Arial, Helvetica, sans-serif; font-size: 14px; }
+span.plugin_link { display: block; clear: both; font-family: Arial, Helvetica, sans-serif; font-size: 14px; }
+body.front span.plugin_link { display: inline; clear: none; font-family: Arial, Helvetica, sans-serif; font-size: 14px; }
+
+p.date { margin-bottom: 2px; font-size: 12px; }
+body.front h1 { height: 40px; }
+
+.highlighted { background-color: yellow; }

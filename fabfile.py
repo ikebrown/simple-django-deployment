@@ -220,7 +220,7 @@ def setup_libreoffice():
         sudo("aptitude -y install libreoffice-calc")
 
 def setup_dbserver():
-    """ Setup database server with postgis_template db """
+    """ Setup database server with db """
     sudo("aptitude update")
     sudo("aptitude -y install git-core "
                               "build-essential "

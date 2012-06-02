@@ -29,7 +29,7 @@ USE_I18N = True
 MEDIA_URL = '/media/media/'
 CMS_MEDIA_URL= '/media/cms/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
-TINYMCE_JS_URL = '/media/tinymce/jscripts/tiny_mce/tiny_mce.js'
+TINYMCE_JS_URL = '/media/tiny_mce/tiny_mce.js'
 JQUERY_JS = 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'
 JQUERY_UI_JS = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js'
 JQUERY_UI_CSS = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/themes/smoothness/jquery-ui.css'
@@ -73,17 +73,18 @@ ROOT_URLCONF = 'simple.urls'
 
 INSTALLED_APPS = (
     'haystack',
-    
+    'categories',
+    'categories.editor',
     'djangocms_utils',
     'simple',
     'django.contrib.humanize',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.admin',
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'cms',
-    'django.contrib.admin',
     'menus',
     'cms.plugins.text',
     'cms.plugins.link',
@@ -158,6 +159,7 @@ THUMBNAIL_PROCESSORS = defaults.PROCESSORS + (
     'filer.thumbnail_processors.scale_and_crop_with_subject_location',
 )
 THUMBNAIL_DEBUG = True
+
 
 try:
     from local_settings import *
