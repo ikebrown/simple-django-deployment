@@ -7,9 +7,7 @@ django-mptt==0.4.2
 -e git+http://github.com/divio/django-cms.git@develop#egg=django-cms
 -e git+http://github.com/fivethreeo/simple-translation#egg=simple_translation
 -e git+http://github.com/fivethreeo/djangocms-utils#egg=djangocms_utils
--e git+http://github.com/fivethreeo/cmsplugin-blog.git#egg=cmsplugin_blog
 -e git+http://github.com/fivethreeo/django-cms-facetsearch.git#egg=django-cms-facetsearch
--e git+http://github.com/fivethreeo/cmsplugin-blog-search.git#egg=cmsplugin-blog-search
 -e git+https://github.com/toastdriven/django-haystack.git#egg=django-haystack
 -e git+https://github.com/toastdriven/pyelasticsearch.git#egg=pyelasticsearch
 django-filer
@@ -23,9 +21,6 @@ cmsplugin-filer==0.8.0
 easy-thumbnails==1.0-alpha-16
 gunicorn
 psycopg2
-xlwt
-xlrd
-gdata
 django-rosetta
 celery-haystack
 BeautifulSoup==3.2.0

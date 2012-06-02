@@ -112,9 +112,9 @@ def deploy_project():
 def push_project():
     """ Push out new code to the server """
     with settings(warn_only=True):
-        local('tar -czf innomed_deployment.tar.gz . --exclude "%(project_name)s.tar.gz"' %  env)
+        local('tar -czf %(project_name)s.tar.gz . --exclude "%(project_name)s.tar.gz"' %  env)
         run("mkdir /home/%(user)s/tmp" % env)
-        put("innomed_deployment.tar.gz", "/home/%(user)s/tmp" % env)
+        put("%(project_name)s.tar.gz" % env, "/home/%(user)s/tmp" % env)
         with cd("/home/%(user)s/tmp" % env):
             run("tar -xzf %(project_name)s.tar.gz" %  env) 
             run("rm -rf /home/%(user)s/%(project_name)s/project" % env)

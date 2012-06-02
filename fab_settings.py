@@ -30,6 +30,7 @@ global_settings = [
 group_settings = {
 
     'vagrantdevelop': {
+        'email': 'my@oh.no',
         'servername': 'simple.com',
         'gunicorn_port': '8001',
         'gunicorn_autostart': 'true',
