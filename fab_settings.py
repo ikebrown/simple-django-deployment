@@ -23,6 +23,7 @@ global_settings = [
     ('pg_dropdb', '/usr/bin/dropdb'),
     ('psql', '/usr/bin/psql'),
     ('postgres_user', 'postgres'),
+    ('elasticsearch_host', '127.0.0.1'),
     ('root', '/home/%(user)s/%(project_name)s'),
     ('extra_paths', extra_paths)
 ]

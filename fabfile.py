@@ -119,8 +119,6 @@ def push_project():
             run("tar -xzf %(project_name)s.tar.gz" %  env) 
             run("rm -rf /home/%(user)s/%(project_name)s/project" % env)
             run("cp -rf project /home/%(user)s/%(project_name)s/project" % env)
-            run("rm -rf /home/%(user)s/%(project_name)s/external_apps" % env)
-            run("cp -rf external_apps /home/%(user)s/%(project_name)s/external_apps" % env)
             run("rm -rf /home/%(user)s/%(project_name)s/local_apps" % env)
             run("cp -rf local_apps /home/%(user)s/%(project_name)s/local_apps" % env)
         run("rm -rf /home/%(user)s/tmp" % env)
@@ -206,11 +204,7 @@ def setup_elasticsearch():
     """ Setup search server """
     with settings(warn_only=True):
         sudo("aptitude update")
-        put("jdk-6u31-linux-i586.bin", use_sudo=True)
-        sudo("chmod u+x jdk-6u31-linux-i586.bin")
-        sudo("./jdk-6u31-linux-i586.bin")
-        sudo("mv jdk1.6.0_31 /usr/lib/jvm/")
-        sudo('sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.6.0_31/bin/java" 1')
+        sudo('sudo apt-get install java')
         run("wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.2.tar.gz -O elasticsearch.tar.gz")
         sudo("tar -xf elasticsearch.tar.gz")
         sudo("rm elasticsearch.tar.gz")
@@ -278,6 +272,9 @@ def setup_webapp():
     run("mkdir -p /home/%(user)s/%(project_name)s" % env)
     run("mkdir -p /home/%(user)s/static" % env)
     run("mkdir -p /home/%(user)s/static/media" % env)
+    configure_webapp()
+
+def configure_webapp():
     files.upload_template("nginx/nginx_webapp.conf", "%(nginx_confdir)ssites-enabled/%(servername)s.conf" % env, use_sudo=True, context=env)
 
 def setup_celery():
