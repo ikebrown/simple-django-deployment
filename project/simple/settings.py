@@ -62,11 +62,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'cms.middleware.multilingual.MultilingualURLMiddleware',
+    #'cms.middleware.multilingual.MultilingualURLMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
-    'simple_translation.middleware.MultilingualGenericsMiddleware'
 )
 
 ROOT_URLCONF = 'simple.urls'
@@ -77,7 +76,6 @@ INSTALLED_APPS = (
     'categories.editor',
     'djangocms_utils',
     'simple',
-    'django.contrib.humanize',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -112,8 +110,15 @@ INSTALLED_APPS = (
     'rosetta',
     'sekizai',
     'djcelery',
-    'celery_haystack'
+    'celery_haystack',
+    'shop',
+    'shop.addressmodel',
+    'category_product'
 )
+
+SHOP_PRODUCT_MODEL = 'category_product.models.CategoryProduct'
+SHOP_PAYMENT_BACKENDS = ['shop.payment.backends.pay_on_delivery.PayOnDeliveryBackend']
+SHOP_SHIPPING_BACKENDS = ['shop.shipping.backends.flat_rate.FlatRateShipping']
 
 gettext = lambda s: s
 

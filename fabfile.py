@@ -70,6 +70,11 @@ def create_manage_command(cmd):
     cmdstr = "PYTHONPATH=%(extra_paths)s /home/%(user)s/%(project_name)s/bin/python /home/%(user)s/%(project_name)s/project/%(project_name)s/manage.py %%s" % env
     return cmdstr % cmd
     
+def python_shell():
+    """  Utility: return manage.py oneliner """
+    cmdstr = "DJANGO_SETTINGS_MODULE=simple.settings PYTHONPATH=%(extra_paths)s /home/%(user)s/%(project_name)s/bin/python" % env
+    return run(cmdstr)
+        
 def manage(cmd, use_sudo=False):
     runcmd = create_manage_command(cmd)
     if use_sudo:
@@ -89,6 +94,15 @@ def script(cmd):
     cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=settings /home/%(user)s/%(project_name)s/bin/python %%s" % env
     return run(cmdstr % fr)
     
+def script(cmd):
+    run("mkdir -p %(root)s/scripts" % env)
+    fl = "scripts/%s" % cmd
+    fr = "%s/%s" % (env.root, fl)
+    put(fl, fr)
+    """  Utility: return python one liner """
+    cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=settings /home/%(user)s/%(project_name)s/bin/python %%s" % env
+    return run(cmdstr % fr)
+        
 def python(cmd):
     """  Utility: return python one liner """
     cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=settings /home/%(user)s/%(project_name)s/bin/python -c \"%%s\"" % env
