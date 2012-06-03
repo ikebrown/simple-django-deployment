@@ -1,16 +1,16 @@
 What does simple-django-deployment give you?
 
-Nginx
-Gunicorn
-Supervisord
-Postgresql
-Rabbitmq
-Elasticsearch
-Celery
-Memcached
-Haystack - pyelasticsearch - haystack-celery
-Django CMS - with a search apphook
-Django-shop - with django categories and # todo searchable products 
+- Nginx
+- Gunicorn
+- Supervisord
+- Postgresql
+- Rabbitmq
+- Elasticsearch
+- Celery
+- Memcached
+- Haystack - pyelasticsearch - haystack-celery
+- Django CMS - with a search apphook
+- Django-shop - with django categories and # todo searchable products 
 
 How to deploy simple-django-deployment.
 
@@ -23,13 +23,12 @@ How to deploy simple-django-deployment.
 7. In the command window do "vagrant box add lucid32 http://files.vagrantup.com/lucid32.box" and "vagrant up".
 8. Log in to 33.33.33.10 using the username vagrant and password vagrant if needed.
 9. After login:
-    
+
+::
+
     cd /vagrant/
-    
     sudo apt-get install git-core 
-    
     git clone git://github.com/fivethreeo/simple-django-deployment.git
-    
     ./provision.sh
     
     Wait for provisioning to complete.
