@@ -28,7 +28,7 @@ How to deploy simple-django-deployment.
 
     cd /vagrant/
     sudo apt-get install git-core 
-    git clone git://github.com/fivethreeo/simple-django-deployment.git
+    git clone git://github.com/fivethreeo/simple-django-deployment.git .
     ./provision.sh
 
 Wait for provisioning to complete.
