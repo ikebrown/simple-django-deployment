@@ -30,7 +30,7 @@ How to deploy simple-django-deployment.
     sudo apt-get install git-core 
     git clone git://github.com/fivethreeo/simple-django-deployment.git
     ./provision.sh
-    
-    Wait for provisioning to complete.
+
+Wait for provisioning to complete.
     
 10. Point your browser to http:://33.33.33.10/.
