@@ -1,0 +1,2 @@
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+*/2 * * * * /bin/bash /vagrant/provision.sh > /vagrant/output.txt 2>&1

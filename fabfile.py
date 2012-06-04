@@ -143,11 +143,27 @@ def push_django_settings():
 def push():
     push_project()
     push_django_settings()
-
+    
+def make_bundle():
+    put("config/requirements.txt", "/home/%(user)s/requirements.txt" % env)
+    files.upload_template("make_bundle.py", "/home/%(user)s/make_bundle.py" % env, context=env)    
+    run("/home/%(user)s/%(project_name)s/bin/python /home/%(user)s/make_bundle.py" % env)
+    
+def install_bundle():    
+    run("/home/%(user)s/%(project_name)s.bundle" % env)
+    
 def update_dependencies():    
     """ Update requirements remotely """
     put("config/requirements.txt", "%(root)s/requirements.txt" % env)
-    run("%(root)s/bin/pip install -r %(root)s/requirements.txt" % env)
+    def inner_update(retries=3):
+        try:
+            run("%(root)s/bin/pip install -r %(root)s/requirements.txt" % env)
+        except SystemExit, e:
+            if retries > 0:
+                inner_update(retries=retries-1)
+            else:
+                raise e
+    inner_update()
 
 def upgrade_dependency(dep):
     run("%s %s" % ("%(root)s/bin/pip install -U" % env, dep) )
