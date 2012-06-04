@@ -24,7 +24,11 @@ urlpatterns += patterns('',
 )   
 
 urlpatterns += patterns('',
-    url(r'^', include('shop.urls')),
+    (r'^pay/', include('shop.payment.urls')),
+    (r'^ship/', include('shop.shipping.urls')),
+    (r'^orders/', include('shop.urls.order')),
+    (r'^checkout/', include('shop.urls.checkout')),
+    (r'^cart/', include('shop.urls.cart')),
 )
 
 urlpatterns += patterns('',
