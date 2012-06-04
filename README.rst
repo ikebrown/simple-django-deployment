@@ -10,7 +10,7 @@ What does simple-django-deployment give you?
 - Memcached
 - Haystack - pyelasticsearch - haystack-celery
 - Django CMS - with a search apphook
-- Django-shop - with django categories and # todo searchable products 
+- Django-shop - rudimentary shop so far, with django-categories and # todo searchable products 
 
 How to deploy simple-django-deployment.
 
