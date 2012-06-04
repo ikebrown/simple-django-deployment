@@ -3,13 +3,15 @@ PIL
 South
 django-reversion==1.4
 django-mptt==0.5.2
--e git+http://github.com/fivethreeo/simple-translation#egg=simple_translation
--e git+http://github.com/fivethreeo/djangocms-utils#egg=djangocms_utils
--e git+http://github.com/fivethreeo/django-cms-facetsearch.git#egg=django-cms-facetsearch
--e git+https://github.com/toastdriven/django-haystack.git#egg=django-haystack
--e git+https://github.com/toastdriven/pyelasticsearch.git#egg=pyelasticsearch
--e git+git://github.com/fivethreeo/django-cms.git@mptt#egg=django-cms
+-e git+git://github.com/toastdriven/django-haystack.git#egg=django-haystack
+-e git+git://github.com/toastdriven/pyelasticsearch.git#egg=pyelasticsearch
 -e git+git://github.com/divio/django-shop.git#egg=django-shop
+django-cms
+djangocms-utils
+django-cms-facetsearch
+cmsplugin-blog
+cmsplugin-blog-search
+simple-translation
 django-categories
 django-filer
 django-pagination

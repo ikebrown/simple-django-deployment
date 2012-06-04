@@ -67,7 +67,7 @@ def config():
 
 def create_manage_command(cmd):
     """  Utility: return manage.py oneliner """
-    cmdstr = "PYTHONPATH=%(extra_paths)s /home/%(user)s/%(project_name)s/bin/python /home/%(user)s/%(project_name)s/project/%(project_name)s/manage.py %%s" % env
+    cmdstr = "DJANGO_SETTINGS_MODULE=simple.settings PYTHONPATH=%(extra_paths)s /home/%(user)s/%(project_name)s/bin/python /home/%(user)s/%(project_name)s/project/%(project_name)s/manage.py %%s" % env
     return cmdstr % cmd
     
 def python_shell():
@@ -87,25 +87,17 @@ def fix_ph():
     
 def script(cmd):
     run("mkdir -p %(root)s/scripts" % env)
-    fl = "scripts/%s" % cmd
-    fr = "%s/%s" % (env.root, fl)
-    put(fl, fr)
+    local_file = "scripts/%s" % cmd
+    remote_file = "%s/%s" % (env.root, local_file)
+    files.upload_template(local_file, remote_file, context=env)
     """  Utility: return python one liner """
-    cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=settings /home/%(user)s/%(project_name)s/bin/python %%s" % env
-    return run(cmdstr % fr)
-    
-def script(cmd):
-    run("mkdir -p %(root)s/scripts" % env)
-    fl = "scripts/%s" % cmd
-    fr = "%s/%s" % (env.root, fl)
-    put(fl, fr)
-    """  Utility: return python one liner """
-    cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=settings /home/%(user)s/%(project_name)s/bin/python %%s" % env
-    return run(cmdstr % fr)
+    cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=simple.settings /home/%(user)s/%(project_name)s/bin/python %%s" % env
+    return run(cmdstr % remote_file)
+
         
 def python(cmd):
     """  Utility: return python one liner """
-    cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=settings /home/%(user)s/%(project_name)s/bin/python -c \"%%s\"" % env
+    cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=simple.settings /home/%(user)s/%(project_name)s/bin/python -c \"%%s\"" % env
     return cmdstr % cmd
 
 def collectstatic():
@@ -156,13 +148,11 @@ def update_dependencies():
     """ Update requirements remotely """
     put("config/requirements.txt", "%(root)s/requirements.txt" % env)
     def inner_update(retries=3):
-        try:
-            run("%(root)s/bin/pip install -r %(root)s/requirements.txt" % env)
-        except SystemExit, e:
+        with settings(warn_only=True):
+            output = run("%(root)s/bin/pip install -r %(root)s/requirements.txt" % env)
+        if output.failed:
             if retries > 0:
                 inner_update(retries=retries-1)
-            else:
-                raise e
     inner_update()
 
 def upgrade_dependency(dep):
@@ -205,8 +195,6 @@ def setup_all():
     configure_db()
     deploy_full(full_setup=True)
     syncdb()
-    add_site()
-    add_superuser()
     setup_celery()
     setup_memcached()
     setup_elasticsearch()
@@ -214,7 +202,9 @@ def setup_all():
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
     configure_supervisor_elasticsearch()
-        
+    add_superuser()
+    script('python_fixture.py')
+    
 def setup_instance():
     setup_webapp()
     update_dependencies()
@@ -222,32 +212,30 @@ def setup_instance():
     configure_db()
     deploy_full(first_run=True)
     syncdb()
-    add_site()
-    add_superuser()
     configure_celery()
     configure_memcached()
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
     configure_supervisor_elasticsearch()
-    
+    add_superuser()
+    script('python_fixture.py')
+
 def setup_elasticsearch():
     """ Setup search server """
-    with settings(warn_only=True):
-        sudo("aptitude update")
-        sudo('aptitude -y install  install openjdk-6-jre')
-        run("wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.2.tar.gz -O elasticsearch.tar.gz")
-        sudo("tar -xf elasticsearch.tar.gz")
-        sudo("rm elasticsearch.tar.gz")
-        sudo("mv elasticsearch-* elasticsearch")
-        sudo("mv elasticsearch /usr/local/share")
+    sudo("aptitude update")
+    sudo('aptitude -y install  install openjdk-6-jre')
+    run("wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.2.tar.gz -O elasticsearch.tar.gz")
+    sudo("tar -xf elasticsearch.tar.gz")
+    sudo("rm elasticsearch.tar.gz")
+    sudo("mv elasticsearch-* elasticsearch")
+    sudo("mv elasticsearch /usr/local/share")
         
 def setup_libreoffice():
-    with settings(warn_only=True):
-        sudo("aptitude update")
-        sudo("aptitude -y install python-software-properties")
-        sudo("sudo add-apt-repository ppa:libreoffice/ppa")
-        sudo("aptitude update")
-        sudo("aptitude -y install libreoffice-calc")
+    sudo("aptitude update")
+    sudo("aptitude -y install python-software-properties")
+    sudo("sudo add-apt-repository ppa:libreoffice/ppa")
+    sudo("aptitude update")
+    sudo("aptitude -y install libreoffice-calc")
 
 def setup_dbserver():
     """ Setup database server with db """

@@ -8,7 +8,7 @@ sudo pip install jinja2
 if [ ! -f /vagrant/identity ]; then
     sudo sed -ibak -e "s/PermitEmptyPasswords\\s*no/PermitEmptyPasswords yes/" /etc/ssh/sshd_config
     sudo restart ssh
-    cd /vagrant/ && ssh-keygen -f identity -C 'Key for fabric' -N '' -t rsa -q
+    cd /vagrant/ && ssh-keygen -f identity -C 'oneusefabrickey' -N '' -t rsa -q
     cd /vagrant/ && cat identity.pub >> /home/vagrant/.ssh/authorized_keys
     sleep 1
 fi
