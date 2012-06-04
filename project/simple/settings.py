@@ -116,7 +116,7 @@ INSTALLED_APPS = (
     'category_product'
 )
 
-SHOP_PRODUCT_MODEL = 'category_product.models.CategoryProduct'
+SHOP_PRODUCT_MODEL = 'category_product.models.defaults.categoryproduct.CategoryProduct'
 SHOP_PAYMENT_BACKENDS = ['shop.payment.backends.pay_on_delivery.PayOnDeliveryBackend']
 SHOP_SHIPPING_BACKENDS = ['shop.shipping.backends.flat_rate.FlatRateShipping']
 
