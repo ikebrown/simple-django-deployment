@@ -40,7 +40,7 @@ tree = [
                 [ ['Jewlery'], ['Lingerie'] ]
             ],
             [ 'For kids',
-                [ ['RC Car'], ['Legos'] ] # oopsies?
+                [ ['RC Car'], ['Legos'] ] # wrong place, why beats me..
             ]
         ]
     ]
@@ -52,7 +52,9 @@ def loopit(what, below):
         if below:
             obj.parent=below
         obj.save()
+        
         if len(item) == 2:
             loopit(item[1], obj)
 
 loopit(tree, None)
+ProductCategory.tree.rebuild()
