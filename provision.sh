@@ -1,5 +1,8 @@
 #!/bin/bash
 sudo crontab -u vagrant -r
+sudo cp  /etc/apt/sources.list /etc/apt/sources.list_backup
+ubuntu_mirror='http://no.archive.ubuntu.com/ubuntu/'
+sudo sed -i "s|http://us.archive.ubuntu.com/ubuntu/|$ubuntu_mirror|" /etc/apt/sources.list
 sudo aptitude update
 sudo aptitude install -y git-core python python-dev python-setuptools
 sudo easy_install -U pip

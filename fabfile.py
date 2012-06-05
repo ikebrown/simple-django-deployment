@@ -1,46 +1,8 @@
-"""
-www.vagrantup.com
-Get vagrant up and running using something like this Vagrantfile:
-
-Vagrant::Config.run do |config|
-    config.vm.define :dev do |config|
-      config.vm.box = "base64"
-      config.vm.forward_port("webdev", 80, 8080)
-      config.vm.customize do |vm|
-          vm.memory_size = 256
-      end
-    end
-end
-
-Login at 127.0.0.1:2222 using the key here
-   
-   https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.ppk
-
-and run this:
-
-sudo aptitude update
-
-sudo aptitude install -y git-core python python-dev python-setuptools
-
-sudo easy_install -U pip ; sudo pip install fabric ; sudo pip install jinja2
-
-wget https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.ppk
-
-git clone ssh://oyvind@mainframe.cylon.no/home/oyvind/innomed-deployment
-
-cd innomed-deployment
-
-# config below is needed because of fab_settings.py, needs a brilliant mind to set mine straight, yours?
-
-fab -R vagrant config setup_all # if fails vagrant destroy and add a " -w" here
-# you will get 4 prompts 2 for java 2 for postfix, use tab and space to navigate
-"""
 import contextlib
 from fabric.api import env, run, cd, sudo, put, get, require, settings, hide, local
 from fabric.contrib import project, files, console
 
 import time
-
 from fab_settings import global_settings, group_settings, servers
 
 # prepare settings
@@ -65,40 +27,40 @@ def config():
             setting = setting % env
         env[key] = setting
 
-def create_manage_command(cmd):
+def create_manage_command(command):
     """  Utility: return manage.py oneliner """
-    cmdstr = "DJANGO_SETTINGS_MODULE=simple.settings PYTHONPATH=%(extra_paths)s /home/%(user)s/%(project_name)s/bin/python /home/%(user)s/%(project_name)s/project/%(project_name)s/manage.py %%s" % env
-    return cmdstr % cmd
+    command_string = "DJANGO_SETTINGS_MODULE=simple.settings PYTHONPATH=%(extra_paths)s /home/%(user)s/%(project_name)s/bin/python /home/%(user)s/%(project_name)s/project/%(project_name)s/manage.py %%s" % env
+    return command_string % command
     
 def python_shell():
     """  Utility: return manage.py oneliner """
-    cmdstr = "DJANGO_SETTINGS_MODULE=simple.settings PYTHONPATH=%(extra_paths)s /home/%(user)s/%(project_name)s/bin/python" % env
-    return run(cmdstr)
+    command_string = "DJANGO_SETTINGS_MODULE=simple.settings PYTHONPATH=%(extra_paths)s /home/%(user)s/%(project_name)s/bin/python" % env
+    return run(command_string)
         
-def manage(cmd, use_sudo=False):
-    runcmd = create_manage_command(cmd)
+def manage(command, use_sudo=False):
+    runcommand = create_manage_command(command)
     if use_sudo:
-        sudo(runcmd)
+        sudo(runcommand)
     else:
-        run(runcmd)
+        run(runcommand)
 
-def fix_ph():
+def fix_placeholder():
     run(python("from cms.models.pluginmodel import CMSPlugin;CMSPlugin.objects.filter(placeholder=781).update(language='nb')"))
     
-def script(cmd):
+def run_script(command):
     run("mkdir -p %(root)s/scripts" % env)
-    local_file = "scripts/%s" % cmd
+    local_file = "scripts/%s" % command
     remote_file = "%s/%s" % (env.root, local_file)
     files.upload_template(local_file, remote_file, context=env)
     """  Utility: return python one liner """
-    cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=simple.settings /home/%(user)s/%(project_name)s/bin/python %%s" % env
-    return run(cmdstr % remote_file)
+    command_string = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=simple.settings /home/%(user)s/%(project_name)s/bin/python %%s" % env
+    return run(command_string % remote_file)
 
         
-def python(cmd):
+def python(command):
     """  Utility: return python one liner """
-    cmdstr = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=simple.settings /home/%(user)s/%(project_name)s/bin/python -c \"%%s\"" % env
-    return cmdstr % cmd
+    command_string = "PYTHONPATH=%(extra_paths)s DJANGO_SETTINGS_MODULE=simple.settings /home/%(user)s/%(project_name)s/bin/python -c \"%%s\"" % env
+    return command_string % command
 
 def collectstatic():
     run(create_manage_command("collectstatic --noinput -l"))
@@ -191,8 +153,8 @@ def setup_all():
     setup_webapp()
     update_dependencies()
     push()
-    setup_dbserver()
-    configure_db()
+    setup_databaseserver()
+    configure_database()
     deploy_full(full_setup=True)
     syncdb()
     setup_celery()
@@ -202,14 +164,13 @@ def setup_all():
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
     configure_supervisor_elasticsearch()
-    add_superuser()
-    script('python_fixture.py')
+    run_script('python_fixture.py')
     
 def setup_instance():
     setup_webapp()
     update_dependencies()
     push()
-    configure_db()
+    configure_database()
     deploy_full(first_run=True)
     syncdb()
     configure_celery()
@@ -217,8 +178,7 @@ def setup_instance():
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
     configure_supervisor_elasticsearch()
-    add_superuser()
-    script('python_fixture.py')
+    run_script('python_fixture.py')
 
 def setup_elasticsearch():
     """ Setup search server """
@@ -237,8 +197,8 @@ def setup_libreoffice():
     sudo("aptitude update")
     sudo("aptitude -y install libreoffice-calc")
 
-def setup_dbserver():
-    """ Setup database server with db """
+def setup_databaseserver():
+    """ Setup database server with database """
     sudo("aptitude update")
     sudo("aptitude -y install git-core "
                               "build-essential "
@@ -248,9 +208,9 @@ def setup_dbserver():
     sudo("unset LANG && pg_createcluster --start -e UTF-8 8.4 main")
     sudo("mkdir /var/lib/postgresql/8.4/main/pg_log")
     sudo("chown postgres:postgres /var/lib/postgresql/8.4/main/pg_log")
-    configure_dbserver()
+    configure_databaseserver()
                               
-def configure_dbserver():
+def configure_databaseserver():
     put("postgresql/pg_hba.conf",
         "/etc/postgresql/8.4/main/pg_hba.conf" % env,
         use_sudo=True)
@@ -342,24 +302,24 @@ def configure_supervisor_elasticsearch():
     run("chmod u+rw /home/%(user)s/%(project_name)s/data/elasticsearch" % env)
     sudo("killall -HUP supervisord")
     
-def supervisorctl(cmd):
-    sudo("supervisorctl %s" % cmd)
+def supervisorctl(command):
+    sudo("supervisorctl %s" % command)
 
-def add_db(dbname, owner, template=''):
-    """ Add database: add_db:dbname,owner,<template> """
+def add_database(database_name, owner, template=''):
+    """ Add database: add_database:database_name,owner,<template> """
     if template:
         template = ' TEMPLATE %s' % template
-    sudo('psql -c "CREATE DATABASE %s%s ENCODING \'unicode\' OWNER %s" -d postgres -U %s' % (dbname, template, owner, env.postgres_user or 'postgres'))
+    sudo('psql -c "CREATE DATABASE %s%s ENCODING \'unicode\' OWNER %s" -d postgres -U %s' % (database_name, template, owner, env.postgres_user or 'postgres'))
 
-def add_dbuser(user, passwd):
-    """ Add database user: add_dbuser:user,password """
+def add_databaseuser(user, passwd):
+    """ Add database user: add_databaseuser:user,password """
     with settings(warn_only=True):
         sudo('psql -c "CREATE USER %s WITH NOCREATEDB NOCREATEUSER PASSWORD \'%s\'" -d postgres -U %s' % (user, passwd, env.postgres_user or 'postgres'))
     
-def configure_db():
+def configure_database():
     """ Set up webapps database """
-    add_dbuser(env.db_user, env.db_password)
-    add_db(env.db_name, env.db_user)
+    add_databaseuser(env.db_user, env.db_password)
+    add_database(env.db_name, env.db_user)
 
 def drop_database():
     sudo('%(pg_dropdb)s %(db_name)s -U %(postgres_user)s' % env)
@@ -376,14 +336,6 @@ def rebuild_index():
     """ Run rebuild_index """
     manage("rebuild_index")
 
-def add_site():
-    """ Add example django site """
-    run(python("from django.contrib.sites.models import Site;Site.objects.create(domain='%(servername)s', name='%(project_name)s')" % env))
-    
-def add_superuser():
-    """ Add django superuser """
-    run(python("from django.contrib.auth.models import User;User.objects.create_superuser('%(db_user)s', '%(db_user)s@%(servername)s', '%(db_password)s')" % env))
-    
 def dump_database():
     run("%(pg_dump)s -U %(db_user)s -O -x -c %(db_name)s > /home/%(user)s/fab_dmp.sql" % env)
     get("/home/%(user)s/fab_dmp.sql" % env, "../fab_dmp.sql")
@@ -392,7 +344,7 @@ def dump_database():
 def load_database():
     if console.confirm("Drop database before loading?"):
         drop_database()
-        add_db(env.db_name, env.db_user)
+        add_database(env.db_name, env.db_user)
     put("../fab_dmp.sql", "/home/%(user)s/fab_dmp.sql" % env)
     run("cat /home/%(user)s/fab_dmp.sql | %(psql)s -U %(db_user)s %(db_name)s" % env)
     run("rm /home/%(user)s/fab_dmp.sql" % env)
