@@ -163,7 +163,6 @@ def setup_all():
     setup_supervisord()
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
-    configure_supervisor_elasticsearch()
     run_script('python_fixture.py')
     
 def setup_instance():
@@ -177,19 +176,13 @@ def setup_instance():
     configure_memcached()
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
-    configure_supervisor_elasticsearch()
     run_script('python_fixture.py')
 
 def setup_elasticsearch():
-    """ Setup search server """
-    sudo("aptitude update")
-    sudo('aptitude -y install  install openjdk-6-jre')
-    run("wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.2.tar.gz -O elasticsearch.tar.gz")
-    sudo("tar -xf elasticsearch.tar.gz")
-    sudo("rm elasticsearch.tar.gz")
-    sudo("mv elasticsearch-* elasticsearch")
-    sudo("mv elasticsearch /usr/local/share")
-        
+
+    files.upload_template("config/elasticsearch.yml", "/usr/local/share/elasticsearch/config/elasticsearch.yml" % env, context=env,use_sudo=True)
+    sudo("sudo rcelasticsearch start")
+
 def setup_libreoffice():
     sudo("aptitude update")
     sudo("aptitude -y install python-software-properties")
@@ -294,14 +287,7 @@ def configure_supervisor_gunicorn():
 def configure_supervisor_celeryd():
     files.upload_template("supervisor/celeryd_supervisor.conf", "/etc/supervisor/conf.d/celeryd_%(user)s.conf" % env, use_sudo=True, context=env)
     sudo("killall -HUP supervisord")
-    
-def configure_supervisor_elasticsearch():
-    files.upload_template("supervisor/elasticsearch_supervisor.conf", "/etc/supervisor/conf.d/elasticsearch_%(user)s.conf" % env, use_sudo=True, context=env)
-    run("mkdir -p /home/%(user)s/%(project_name)s/logs/elasticsearch" % env)
-    run("mkdir -p /home/%(user)s/%(project_name)s/data/elasticsearch" % env)
-    run("chmod u+rw /home/%(user)s/%(project_name)s/data/elasticsearch" % env)
-    sudo("killall -HUP supervisord")
-    
+
 def supervisorctl(command):
     sudo("supervisorctl %s" % command)
 

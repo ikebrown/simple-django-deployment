@@ -71,11 +71,11 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'simple.urls'
 
 INSTALLED_APPS = (
+    'simple',
     'haystack',
     'categories',
     'categories.editor',
     'djangocms_utils',
-    'simple',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -113,8 +113,7 @@ INSTALLED_APPS = (
     'celery_haystack',
     'shop',
     'shop.addressmodel',
-    'category_product',
-    'simple',
+    'category_product'
 
 )
 

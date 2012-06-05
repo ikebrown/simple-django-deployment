@@ -27,7 +27,7 @@
             {% else %}
             {% endif %}
     {% endblock refine_search %}
-
+{{ query.count }}
     {% block search_results %}
         {% if query %}
             <h2>{% trans "Results" %}</h2>
