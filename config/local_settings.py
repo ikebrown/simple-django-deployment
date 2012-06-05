@@ -8,6 +8,13 @@ TEMPLATE_DEBUG = DEBUG
 STATIC_ROOT = "/home/%(user)s/static"
 STATIC_URL = "/media/"
 
+STATICFILES_DIRS = (
+    ("feincms", '%(root)s/%%sstatic/feincms' %% 'lib/python2.6/site-packages/feincms/'),
+)
+TEMPLATE_DIRS = (
+    '%(root)s/%%stemplates' %% 'lib/python2.6/site-packages/feincms/',
+)
+
 MEDIA_ROOT = '%%s/media' %% STATIC_ROOT
 MEDIA_URL = '%%smedia/' %% STATIC_URL
 

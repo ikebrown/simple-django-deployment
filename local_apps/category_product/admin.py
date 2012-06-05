@@ -1,5 +1,5 @@
-from categories.base import CategoryBaseAdmin
+from mptt.admin import FeinCMSModelAdmin
 
-class ProductCategoryAdmin(CategoryBaseAdmin):
+class ProductCategoryAdmin(FeinCMSModelAdmin):
     exclude = ('path',)
     list_display = ('name', 'active', 'path')

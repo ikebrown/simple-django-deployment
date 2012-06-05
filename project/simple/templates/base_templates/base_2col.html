@@ -35,7 +35,21 @@
             {% block cols %}
                 <div class="page-col1-68">{% block left-col %}{% placeholder "main" %}{% endblock left-col %}</div>
                 <div class="page-col2-29"><h1>&nbsp;</h1>
-                    {% block right-col %}{% placeholder "left" %}{% endblock right-col %}
+                    {% block right-col %}{% load mptt_tags %}
+{% full_tree_for_model category_product.ProductCategory as categorys %}
+
+<ul class="root">
+    {% recursetree categorys %}
+        <li>
+            <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>{% endblock right-col %}
                 </div>
             {% endblock cols %}
             </div>
