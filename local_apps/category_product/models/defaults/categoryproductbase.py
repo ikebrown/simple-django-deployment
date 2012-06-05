@@ -1,10 +1,11 @@
 from django.db import models
 from shop.models.defaults.bases import BaseProduct
 from mptt.fields import TreeForeignKey, TreeManyToManyField
+from category_product.utils import get_category_model_string
 
 class CategoryProductBase(BaseProduct):
-    main_category = TreeForeignKey('category_product.ProductCategory')
-    additional_categories = TreeManyToManyField('category_product.ProductCategory', related_name='extra_product_categories')
+    main_category = TreeForeignKey(get_category_model_string('Category'))
+    additional_categories = TreeManyToManyField(get_category_model_string('Category'), related_name='extra_product_categories')
 
     class Meta:
         abstract = True

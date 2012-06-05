@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from mptt.managers import TreeManager
 from category_product.models.defaults.productcategorybase import ProductCategoryBase
 
-class ProductCategory(ProductCategoryBase):
+class Category(ProductCategoryBase):
     tree = TreeManager()
     
     class Meta:

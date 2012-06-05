@@ -113,12 +113,15 @@ INSTALLED_APPS = (
     'celery_haystack',
     'shop',
     'shop.addressmodel',
-    'category_product'
+    'category_product',
+    'simple',
+
 )
 
-SHOP_PRODUCT_MODEL = 'category_product.models.defaults.categoryproduct.CategoryProduct'
+SHOP_PRODUCT_MODEL = 'simple.models.product.Product'
 SHOP_PAYMENT_BACKENDS = ['shop.payment.backends.pay_on_delivery.PayOnDeliveryBackend']
 SHOP_SHIPPING_BACKENDS = ['shop.shipping.backends.flat_rate.FlatRateShipping']
+CATEGORYPRODUCT_CATEGORY_MODEL = 'simple.models.category.Category'
 
 gettext = lambda s: s
 

@@ -35,8 +35,11 @@
             {% block cols %}
                 <div class="page-col1-68">{% block left-col %}{% placeholder "main" %}{% endblock left-col %}</div>
                 <div class="page-col2-29"><h1>&nbsp;</h1>
-                    {% block right-col %}{% load mptt_tags %}
-{% full_tree_for_model category_product.ProductCategory as categorys %}
+                    {% block right-col %}
+
+{% load mptt_tags %}
+                    
+{% full_tree_for_model simple.Category as categorys %}
 
 <ul class="root">
     {% recursetree categorys %}

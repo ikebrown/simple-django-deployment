@@ -111,7 +111,7 @@ def update_dependencies():
     put("config/requirements.txt", "%(root)s/requirements.txt" % env)
     def inner_update(retries=3):
         with settings(warn_only=True):
-            output = run("%(root)s/bin/pip install -r %(root)s/requirements.txt" % env)
+            output = run("PIP_DOWNLOAD_CACHE=/vagrant/pipcache %(root)s/bin/pip install -r %(root)s/requirements.txt" % env)
         if output.failed:
             if retries > 0:
                 inner_update(retries=retries-1)

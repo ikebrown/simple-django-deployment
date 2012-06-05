@@ -10,5 +10,5 @@ from shop.util.loader import load_class
 # Extensibility
 #==============================================================================
 CATEGORY_MODEL = getattr(settings, 'CATEGORYPRODUCT_CATEGORY_MODEL',
-    'category_product.models.defaults.productcategory.ProductCategory')
-ProductCategory = load_class(CATEGORY_MODEL, 'CATEGORYPRODUCT_CATEGORY_MODEL')
+    'category_product.models.defaults.productcategory.Category')
+Category = load_class(CATEGORY_MODEL, 'CATEGORYPRODUCT_CATEGORY_MODEL')

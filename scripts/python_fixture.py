@@ -2,7 +2,7 @@
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-from category_product.models import ProductCategory
+from category_product.models import Category
 from cms import api
 
 User.objects.create_superuser('%(db_user)s', '%(db_user)s@%(servername)s', '%(db_password)s')
@@ -48,7 +48,7 @@ tree = [
 
 def loopit(what, below):
     for item in what:
-        obj = ProductCategory(name=item[0], slug=slugify(item[0]), active=True)
+        obj = Category(name=item[0], slug=slugify(item[0]), active=True)
         if below:
             obj.parent=below
         obj.save()
@@ -57,4 +57,4 @@ def loopit(what, below):
             loopit(item[1], obj)
 
 loopit(tree, None)
-ProductCategory.tree.rebuild()
+Category.tree.rebuild()
