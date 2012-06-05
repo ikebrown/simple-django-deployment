@@ -28,14 +28,19 @@ urlpatterns += patterns('',
 )
 
 urlpatterns += patterns('',
-    url(r'^', include('category_product.urls')),
+    url(r'^catalog/', include('category_product.urls')),
 )   
-
-
 
 urlpatterns += patterns('',
     url(r'^', include('cms.urls')),
 )
+
+
+
+
+
+
+
     
 
 

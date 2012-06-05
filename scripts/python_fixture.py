@@ -40,7 +40,7 @@ tree = [
                 [ ['Jewlery'], ['Lingerie'] ]
             ],
             [ 'For kids',
-                [ ['RC Car'], ['Legos'] ] # wrong place, why beats me..
+                [ ['RC Car'], ['Legos'] ]
             ]
         ]
     ]
