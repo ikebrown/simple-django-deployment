@@ -44,9 +44,6 @@ def manage(command, use_sudo=False):
     else:
         run(runcommand)
 
-def fix_placeholder():
-    run(python("from cms.models.pluginmodel import CMSPlugin;CMSPlugin.objects.filter(placeholder=781).update(language='nb')"))
-    
 def run_script(command):
     run("mkdir -p %(root)s/scripts" % env)
     local_file = "scripts/%s" % command
@@ -104,7 +101,7 @@ def make_bundle():
     run("/home/%(user)s/%(project_name)s/bin/python /home/%(user)s/make_bundle.py" % env)
     
 def install_bundle():    
-    run("/home/%(user)s/%(project_name)s.bundle" % env)
+    run("pip install /home/%(user)s/%(project_name)s.bundle" % env)
     
 def update_dependencies():    
     """ Update requirements remotely """
@@ -195,13 +192,6 @@ def setup_elasticsearch():
     files.upload_template("config/elasticsearch.yml", "/usr/local/share/elasticsearch/config/elasticsearch.yml" % env, context=env,use_sudo=True)
     sudo("sudo rcelasticsearch start")
 
-def setup_libreoffice():
-    sudo("aptitude update")
-    sudo("aptitude -y install python-software-properties")
-    sudo("sudo add-apt-repository ppa:libreoffice/ppa")
-    sudo("aptitude update")
-    sudo("aptitude -y install libreoffice-calc")
-
 def setup_databaseserver():
     """ Setup database server with database """
     sudo("aptitude update")
@@ -279,14 +269,16 @@ def setup_memcached():
     sudo("aptitude -y install memcached")
     put("memcached/memcached", "/etc/init.d/memcached", use_sudo=True)
     sudo("chown root:root /etc/init.d/memcached")
-    sudo("chmod 755 /etc/init.d/memcached")
+    sudo("chmod u=rx /etc/init.d/memcached")
     put("memcached/start-memcached", "/usr/share/memcached/scripts/start-memcached", use_sudo=True)
     sudo("chown root:root /usr/share/memcached/scripts/start-memcached")
-    sudo("chmod 755 /usr/share/memcached/scripts/start-memcached")
+    sudo("chmod u=rx /usr/share/memcached/scripts/start-memcached")
+    sudo("/etc/init.d/memcached start")
     configure_memcached()
 
 def configure_memcached():
     files.upload_template("memcached/memcached.conf", "/etc/memcached_%(user)s.conf" % env, use_sudo=True, context=env)
+    sudo("/etc/init.d/memcached restart")
 
 def setup_supervisord():
     sudo("aptitude update")
