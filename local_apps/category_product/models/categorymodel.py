@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This overrides the ProductCategory  with the class loaded from the
+This overrides the Category  with the class loaded from the
 CATEGORYPRODUCT_CATEGORY_MODEL setting if it exists.
 """
 from django.conf import settings

@@ -16,7 +16,7 @@ class ProductIndex(IndexBase, Indexable):
     def prepare(self, obj):
         data = super(ProductIndex, self).prepare(obj)
         data['url'] = obj.get_absolute_url()
-        data['text'] = u'%s %s' % (obj.name, HTMLEntitiesToUnicode(force_unicode(strip_tags(obj.body)))
+        data['text'] = u'%s %s' % (obj.name, HTMLEntitiesToUnicode(force_unicode(strip_tags(obj.body))))
         return data
         
     def index_queryset(self):

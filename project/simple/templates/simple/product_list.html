@@ -16,10 +16,10 @@
 
   {{object.unit_price}}<br />
 
-  {% if object.category %}
-  {{object.category.name}}<br />
+  {% if object.main_category.is_root_node %}
+  (Product is at root category {{ object.main_category }})
   {% else %}
-  (Product is at root category)<br />
+  (Product is at category {{ object.main_category }})
   {% endif %}
   <hr />
 

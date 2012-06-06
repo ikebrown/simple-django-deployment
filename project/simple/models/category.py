@@ -1,6 +1,6 @@
 from django.db import models
 from tinymce import models as tinymce_models
-from category_product.models.defaults.productcategorybase import ProductCategoryBase
+from category_product.models.defaults.category.base import ProductCategoryBase
         
 class Category(ProductCategoryBase):
     
