@@ -179,7 +179,19 @@ def setup_instance():
     run_script('python_fixture.py')
 
 def setup_elasticsearch():
-
+    sudo("aptitude update")
+    sudo('aptitude -y install openjdk-6-jre curl')
+    run("wget https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.2.tar.gz -O elasticsearch.tar.gz")
+    sudo("tar -xf elasticsearch.tar.gz")
+    sudo("rm elasticsearch.tar.gz")
+    sudo("mv elasticsearch-* elasticsearch")
+    sudo("mv elasticsearch /usr/local/share")
+    sudo("curl -L http://github.com/elasticsearch/elasticsearch-servicewrapper/tarball/master | tar -xz")
+    sudo("mv *servicewrapper*/service /usr/local/share/elasticsearch/bin/")
+    sudo("rm -Rf *servicewrapper*")
+    sudo("/usr/local/share/elasticsearch/bin/service/elasticsearch install")
+    sudo("ln -s `readlink -f /usr/local/share/elasticsearch/bin/service/elasticsearch` /usr/local/bin/rcelasticsearch")
+    sudo("sed -ibak 's|<Path to ElasticSearch Home>|/usr/local/share/elasticsearch|' /usr/local/share/elasticsearch/bin/service/elasticsearch.conf")
     files.upload_template("config/elasticsearch.yml", "/usr/local/share/elasticsearch/config/elasticsearch.yml" % env, context=env,use_sudo=True)
     sudo("sudo rcelasticsearch start")
 
