@@ -6,7 +6,9 @@ django-mptt==0.5.2
 -e git+git://github.com/toastdriven/django-haystack.git#egg=django-haystack
 -e git+git://github.com/toastdriven/pyelasticsearch.git#egg=pyelasticsearch
 -e git+git://github.com/divio/django-shop.git#egg=django-shop
--e git+git://github.com/fivethreeo/django-netaxept.git#egg=django-netaxept
+-e git+git://github.com/fivethreeo/django-netaxept#egg=django-netaxept
+-e git+git://github.com/fivethreeo/django-shop-netaxept#egg=django-shop-netaxept
+-e git+git://github.com/fivethreeo/django-treeadmin.git#egg=django-treeadmin
 django-cms
 djangocms-utils
 django-cms-facetsearch
@@ -27,4 +29,3 @@ psycopg2
 django-rosetta
 celery-haystack
 BeautifulSoup==3.2.0
-FeinCMS

@@ -1,5 +1,6 @@
 # coding=utf-8
 # Django settings for cms project.
+import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -112,13 +113,17 @@ INSTALLED_APPS = (
     'djcelery',
     'celery_haystack',
     'shop',
-    'shop.addressmodel',
-    'category_product'
-
+    'category_product',
+    'treeadmin'
 )
 
 SHOP_PRODUCT_MODEL = 'simple.models.product.Product'
-SHOP_PAYMENT_BACKENDS = ['shop.payment.backends.pay_on_delivery.PayOnDeliveryBackend']
+SHOP_ADDRESS_MODEL =  'simple.models.address.Address'
+
+SHOP_PAYMENT_BACKENDS = [
+    'shop.payment.backends.pay_on_delivery.PayOnDeliveryBackend',
+    'shop_netaxept.offsite_netaxept.OffsiteNetaxeptBackend'
+]
 SHOP_SHIPPING_BACKENDS = ['shop.shipping.backends.flat_rate.FlatRateShipping']
 CATEGORYPRODUCT_CATEGORY_MODEL = 'simple.models.category.Category'
 
@@ -167,6 +172,39 @@ THUMBNAIL_PROCESSORS = defaults.PROCESSORS + (
 )
 THUMBNAIL_DEBUG = True
 
+# netaxept 
+NETAXEPT_PAYMENT_METHOD_LIST='Visa,MasterCard,Paypal'
+NETAXEPT_MERCHANTID = '*snip*'
+NETAXEPT_TOKEN = '*snip*'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'stdout': {                # define and name a handler
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler', # set the logging class to log to a file
+            'formatter': 'simple',         # define the formatter to associate
+            'stream': sys.stdout
+        },
+
+    },
+    'loggers': {
+        'djnetaxept.utils': {              # define a logger - give it a name
+            'handlers': ['stdout'], # specify what handler to associate
+            'level': 'DEBUG',                 # specify the logging level
+            'propagate': True
+        }       
+    }       
+}
 
 try:
     from local_settings import *

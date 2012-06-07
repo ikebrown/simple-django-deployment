@@ -1,5 +1,5 @@
-from mptt.admin import FeinCMSModelAdmin
+from treeadmin.admin import TreeAdmin
 
-class ProductCategoryAdmin(FeinCMSModelAdmin):
+class ProductCategoryAdmin(TreeAdmin):
     exclude = ('path',)
     list_display = ('name', 'active', 'path')
