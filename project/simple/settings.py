@@ -122,7 +122,6 @@ SHOP_ADDRESS_MODEL =  'simple.models.address.Address'
 
 SHOP_PAYMENT_BACKENDS = [
     'shop.payment.backends.pay_on_delivery.PayOnDeliveryBackend',
-    'shop_netaxept.offsite_netaxept.OffsiteNetaxeptBackend'
 ]
 SHOP_SHIPPING_BACKENDS = ['shop.shipping.backends.flat_rate.FlatRateShipping']
 CATEGORYPRODUCT_CATEGORY_MODEL = 'simple.models.category.Category'
