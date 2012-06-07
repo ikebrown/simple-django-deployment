@@ -74,8 +74,6 @@ ROOT_URLCONF = 'simple.urls'
 INSTALLED_APPS = (
     'simple',
     'haystack',
-    'categories',
-    'categories.editor',
     'djangocms_utils',
     'django.contrib.auth',
     'django.contrib.contenttypes',
