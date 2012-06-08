@@ -18,21 +18,28 @@ openjdk-6-jre:
     - template: jinja
     - context:
         home: "/usr/local/share/elasticsearch"
-            
+    
+install_elasticsearch.sh:
+  file.managed:
+    - source: salt://searchserver/install.sh
+    - name: /usr/local/bin/install_elasticsearch.sh
+    - mode: 500
+
+/usr/local/bin/install_elasticsearch.sh:
+  cmd.run:
+    - shell: /bin/bash
+    - require:
+      - file: install_elasticsearch.sh
+    - unless: test -d /usr/local/share/elasticsearch/
+    
 elasticsearch:
   service:
     - running
     - require:
+      - cmd: /usr/local/bin/install_elasticsearch.sh
       - pkg: openjdk-6-jre
+    - watch:
+      - file: /usr/local/share/elasticsearch/bin/service/elasticsearch.conf
+      - file: /usr/local/share/elasticsearch/config/elasticsearch.yml
 
-cp.get_path: https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.2.tar.gz /tmp/elasticsearch.tar.gz
-archive.tar: xzfv /tmp/elasticsearch.tar.gz
-cmdmod.run: 'rm elasticsearch.tar.gz'
-cmdmod.run: 'mv elasticsearch* elasticsearch'
-cmdmod.run: 'mv elasticsearch /usr/local/share'
-cp.get_path: http://github.com/elasticsearch/elasticsearch-servicewrapper/tarball/master /tmp/elasticsearch-servicewrapper.tar.gz
-archive.tar: xzfv /tmp/eelasticsearch-servicewrapper.tar.gz
-cmdmod.run: 'mv *servicewrapper*/service /usr/local/share/elasticsearch/bin/'
-cmdmod.run: 'rm -Rf *servicewrapper*'
-cmdmod.run: '/usr/local/share/elasticsearch/bin/service/elasticsearch install'
-cmdmod.run: 'ln -s `readlink -f /usr/local/share/elasticsearch/bin/service/elasticsearch` /usr/local/bin/rcelasticsearch'
+      
