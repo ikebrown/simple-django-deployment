@@ -4,17 +4,26 @@ postgresql-install:
        - postgresql-8.4
        - postgresql-server-dev-8.4
 
-new_cluster:
-  cmd.run:
-    - name: pg_createcluster --start -e UTF-8 8.4 main
+postgresql-8.4:
+  service:
+    - running
+    - require:
+      - pkg: postgresql-server-dev-8.4
+      - cmd: create_cluster
+
+create_cluster:
+  cmd.wait:
+    - name: LANG= pg_createcluster --start 8.4 main
     - watch:
       - pkg: postgresql-install
-      
+
 /var/lib/postgresql/8.4/main/pg_log:
   file.directory:
     - makedirs: True
     - user: postgres
     - group: postgres
+    - require:
+      - cmd: create_cluster
        
 /etc/postgresql/8.4/main/postgresql.conf:
   file.managed:
@@ -25,7 +34,11 @@ new_cluster:
     - context:
         listen_addresses: "127.0.0.1"
         postgres_logging: "off"
-
+    - watch_in:
+       - service: postgresql-8.4
+    - require:
+      - cmd: create_cluster   
+       
 /etc/postgresql/8.4/main/pg_hba.conf:
   file.managed:
     - source: salt://postgresql_server/pg_hba.conf
@@ -34,12 +47,7 @@ new_cluster:
     - template: jinja
     - context:
         trust_host: "127.0.0.1"
-         
-postgresql-8.4:
-  service:
-     - running
-     - watch:
-       - file: /etc/postgresql/8.4/main/postgresql.conf
-       - file: /etc/postgresql/8.4/main/pg_hba.conf
-     - require:
-       - pkg: postgresql-install
+    - watch_in:
+       - service: postgresql-8.4
+    - require:
+      - cmd: create_cluster       
