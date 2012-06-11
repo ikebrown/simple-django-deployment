@@ -9,8 +9,9 @@ from shop.util.address import (
     get_billing_address_from_request,
     get_shipping_address_from_request,
 )
+from shop.util.cart import get_or_create_cart
 
-class CheckoutShippingSelectionView(CheckoutSelectionView):
+class CheckoutSinglestepSelectionView(CheckoutSelectionView):
     
     def handle_billingshipping_forms(self, update_only, shipping_adress_form, billing_address_form):
         
@@ -34,9 +35,10 @@ class CheckoutShippingSelectionView(CheckoutSelectionView):
             payment_method = billingshipping_form.cleaned_data['payment_method']
             
             if update_only:
-                shipping_choices_form = self.get_backend_choices_form('shipping', shipping_method,
+                items = get_or_create_cart(request).items.all()
+                shipping_choices_form = self.get_backend_choices_form('shipping', items, shipping_method,
                     shipping_adress_form, billing_address_form)         
-                payment_choices_form = self.get_backend_choices_form('payment', payment_method,
+                payment_choices_form = self.get_backend_choices_form('payment', items, payment_method,
                     shipping_adress_form, billing_address_form)         
     
                 if shipping_choices_form:
@@ -72,8 +74,8 @@ class CheckoutShippingSelectionView(CheckoutSelectionView):
                 assign_address_to_request(self.request, shipping_address,
                     shipping=True)
                 assign_address_to_request(self.request, billing_address,
-                    shipping=False)                
-                    
+                    shipping=False)          
+                          
             billingshipping_form, shipping_choices_form, payment_choices_form = \
                 self.handle_billingshipping_forms(update_only, shipping_form, billing_form)
                 
@@ -109,9 +111,9 @@ class CheckoutShippingSelectionView(CheckoutSelectionView):
     def post(self, *args, **kwargs):
         """ Called when view is POSTed """
         update_only = self.request.POST.get('update_only', False)
-        self.handle_forms(update_only=update_only)
+        forms = self.handle_forms(update_only=update_only)
         if self.all_forms_valid() and not update_only:
-            return HttpResponseRedirect(reverse('checkout_confirm'))
+            return HttpResponseRedirect(reverse('checkout_continue'))
         return self.get(self, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
