@@ -5,7 +5,7 @@ postgresql-install:
        - postgresql-server-dev-8.4
 
 drop_cluster:
-  cmd.run:
+  cmd.wait:
     - name: pg_dropcluster --stop 8.4 main
     - unless: 
     - use_in:

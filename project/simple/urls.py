@@ -3,6 +3,8 @@ from django.conf import settings
 from django.conf.urls.defaults import *
 from django.contrib import admin
 
+from simple.views import CheckoutShippingSelectionView
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -19,6 +21,13 @@ if 'rosetta' in settings.INSTALLED_APPS:
         url(r'^rosetta/', include('rosetta.urls')),
     )
 
+
+urlpatterns += patterns('',
+    url(r'^checkout/$', CheckoutShippingSelectionView.as_view(),
+        name='checkout_selection'  # First step of the checkout process
+        )
+    )
+    
 urlpatterns += patterns('',
     (r'^pay/', include('shop.payment.urls')),
     (r'^ship/', include('shop.shipping.urls')),

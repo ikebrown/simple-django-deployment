@@ -23,6 +23,7 @@ class Address(models.Model):
                                         blank=True, null=True)
 
     name = models.CharField(_('Name'), max_length=255)
+    zip_code = models.CharField(_('Zip Code'), max_length=20)
 
     class Meta(object):
         verbose_name = _('Address')
