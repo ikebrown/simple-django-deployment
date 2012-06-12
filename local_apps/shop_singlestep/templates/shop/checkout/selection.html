@@ -4,7 +4,8 @@
   <h1>Shipping and Billing</h1>
   <form method="POST">
   {% csrf_token %}
-  <input type="checkbox" name="update_only" />
+  (handle this with js) <input type="checkbox" name="js_enabled" /> Js enabled
+  <input type="checkbox" name="update_only" /> Update only 
   <h3>Your shipping address</h3>
   {{ shipping_address.as_p }}
   <h3>Your billing address</h3>

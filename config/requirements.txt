@@ -29,3 +29,4 @@ psycopg2
 django-rosetta
 celery-haystack
 BeautifulSoup==3.2.0
+simplejson

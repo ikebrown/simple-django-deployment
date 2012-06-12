@@ -110,6 +110,8 @@ INSTALLED_APPS = (
     'sekizai',
     'djcelery',
     'celery_haystack',
+    'shop_singlestep',
+    'shop_bring',
     'shop',
     'category_product',
     'treeadmin'

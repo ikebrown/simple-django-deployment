@@ -32,7 +32,7 @@ group_settings = {
 
     'vagrantdevelop': {
         'email': 'my@oh.no',
-        'servername': '33.33.33.10',
+        'servername': '192.168.0.6',
         'gunicorn_port': '8001',
         'gunicorn_autostart': 'true',
         'db_name': 'simple_develop',

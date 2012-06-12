@@ -18,15 +18,16 @@ if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
         url(r'^rosetta/', include('rosetta.urls')),
     )
-
-
-
+    
+urlpatterns += patterns('',
+    (r'^checkout/$', include('shop_singlestep.urls')),
+)
     
 urlpatterns += patterns('',
     (r'^pay/', include('shop.payment.urls')),
     (r'^ship/', include('shop.shipping.urls')),
     (r'^orders/', include('shop.urls.order')),
-    (r'^checkout/', include('shop_singlestep.urls')),
+    (r'^checkout/', include('shop.urls.checkout')),
     (r'^cart/', include('shop.urls.cart')),
 )
 

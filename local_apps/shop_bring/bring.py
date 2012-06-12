@@ -8,14 +8,24 @@ from django.template import RequestContext
 from django import forms
 
 from shop.util.decorators import on_method, shop_login_required
+from shop.models.ordermodel import OrderExtraInfo
+
+import requests
+import simplejson
+
+tmp_choices = (
+    (90, 'Fast'),
+    (50, 'Slow')
+)
 
 class BringChoicesForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
-        del kwargs['zipcode']
+        choices = kwargs.pop('choices')
         super(BringChoicesForm, self).__init__(*args, **kwargs)
-        
-    rate = forms.DecimalField()
+        self.fields['shipment_method'].choices = choices
+
+    shipment_method = forms.ChoiceField()
 
 class BringShipping(object):
 
@@ -30,16 +40,44 @@ class BringShipping(object):
         if not shipping_adress_form:
             zipcode = self.shop.get_order(request).shipping_address.zip_code
         else:
-            zipcode = shipping_adress_form.data['ship-zip_code']        
+            zipcode = shipping_adress_form.data['ship-zip_code']
             
+        choices = self.get_product_choices()[1]    
         if request.method == 'POST':
-            form = BringChoicesForm(request.POST, zipcode=zipcode)
+            form = BringChoicesForm(request.POST, choices=choices)
         else:
-             form = BringChoicesForm(zipcode=zipcode)   
+             form = BringChoicesForm(choices=choices)   
         return form
     
-    def get_rate(self, choices, items):
-        return choices['rate']
+    def get_choice(self, product):
+        name = product['GuiInformation']['ProductName']
+        price = product['Price']['PackagePriceWithoutAdditionalServices']['AmountWithVAT']
+        return (product['ProductId'], u'%s %skr' % (name, price))
+    
+    def get_product_choices(self):
+        url = 'http://fraktguide.bring.no/fraktguide/products/all.json'
+        params = {
+            'weightInGrams': 1500,
+            'from': 3242,
+            'to': 7600
+        }
+        data = simplejson.loads(requests.get(url, params=params).text)
+        form_choices = []
+        choices = {}
+        for product in data['Product']:
+            choices[product['ProductId']] = product
+            form_choices.append(self.get_choice(product))
+        return (choices, form_choices)
+    
+    def get_rate(self, products, choices, items):
+        product_type = choices['shipment_method']
+        product = products[0][product_type]
+        return Decimal(product['Price']['PackagePriceWithoutAdditionalServices']['AmountWithVAT'])
+        
+    def get_info(self, products, choices, items):
+        product_type = choices['shipment_method']
+        product = products[0][product_type]
+        return product['GuiInformation']['ProductName']
 
     @on_method(shop_login_required)
     def view_process_order(self, request):
@@ -48,15 +86,19 @@ class BringShipping(object):
         order = self.shop.get_order(request)
         items = order.items.all()
         
+        products = self.get_product_choices()
         if choices:
-            rate = self.get_rate(choices, items)
+            rate = self.get_rate(products, choices, items)
+            info = self.get_info(products, choices, items)
         else:
             form = self.get_bound_form(request, items)
             if request.method == 'POST':
                 if form.is_valid():
-                    rate = self.get_rate(form.cleaned_data, items)
+                    rate = self.get_rate(products, form.cleaned_data, items)
+                    info = self.get_info(products, choices, items)
     
         if rate:
+            OrderExtraInfo.objects.create(order=order, text=info)
             self.shop.add_shipping_costs(order,
                 'Posten shipping', rate)
             return self.shop.finished(order)
