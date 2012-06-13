@@ -22,11 +22,17 @@ class BringChoicesForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
         choices = kwargs.pop('choices')
+        self.zipcode = kwargs.pop('zipcode')
         super(BringChoicesForm, self).__init__(*args, **kwargs)
         self.fields['shipment_method'].choices = choices
 
     shipment_method = forms.ChoiceField()
-
+    
+    def clean(self):
+        cleaned_data = super(BringChoicesForm, self).clean()
+        cleaned_data['zipcode'] = self.zipcode
+        return cleaned_data
+        
 class BringShipping(object):
 
     url_namespace = 'posten'
@@ -44,7 +50,7 @@ class BringShipping(object):
             
         choices = self.get_product_choices()[1]    
         if request.method == 'POST':
-            form = BringChoicesForm(request.POST, choices=choices)
+            form = BringChoicesForm(request.POST, choices=choices, zipcode=zipcode)
         else:
              form = BringChoicesForm(choices=choices)   
         return form

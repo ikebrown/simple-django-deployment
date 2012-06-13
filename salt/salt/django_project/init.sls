@@ -1,13 +1,18 @@
 include:
   - supervisord
-  - virtualev
+  - virtualenv
+  - pip
   
 app-pkgs:
   pkg:
     - installed
     - names:
-      - python-virtualenv
       - supervisor
+
+install-virtualenv:
+  pip:
+    - installed
+    - name: virtualenv
 
 {% set root="/home/vagrant/simple" %}
 {% set virtualenv='%s/venv' % root %}
@@ -17,6 +22,11 @@ app-pkgs:
 {% set gunicorn_args="--preload --workers 2" %}
 {% set gunicorn_user="vagrant" %}
 
+/home/{{ gunicorn_user }}/simple:
+   file.directory:
+     - makedirs: True
+     - user: vagrant
+       
 /etc/supervisor/conf.d/{{ gunicorn_user }}_gunicorn.conf:
   file.managed:
     - source: salt://django_project/gunicorn_supervisor.conf
@@ -32,13 +42,11 @@ app-pkgs:
       extra_paths:
         - {{ root }}/project
         - {{ root }}/local_apps
-    - watch:
-      - virtualenv: /home/{{ gunicorn_user }}/simple/venv
           
 /home/{{ gunicorn_user }}/simple/venv:
    virtualenv:
+     - managed
      - distribute: True
-     - system_site_packages: True
-     - manage
      - require:
-       - pkg: app-pkgs
+       - pip: install-virtualenv
+       - file: /home/{{ gunicorn_user }}/simple

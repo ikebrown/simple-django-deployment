@@ -106,7 +106,7 @@ class CheckoutSinglestepSelectionView(CheckoutSelectionView):
         js_enabled = self.request.REQUEST.get('js_enabled', False)
         update_only = self.request.REQUEST.get('update_only', False)   
         forms = self.handle_forms(js_enabled=js_enabled, update_only=update_only)
-        if self.all_forms_valid() and not update_only:
+        if not update_only  and self.all_forms_valid():
             return HttpResponseRedirect(reverse('checkout_shipping'))
         return self.get(self, *args, **kwargs)
 
