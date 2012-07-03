@@ -27,6 +27,22 @@ install-virtualenv:
      - makedirs: True
      - user: vagrant
        
+/etc/nginx/sites-enabled:
+  file.managed:
+    - source: salt://django_project/gunicorn_supervisor.conf
+    - template: jinja
+    - context:
+      python: {{ virtualenv }}/bin/python
+      ip: {{ ip }}
+      port: {{ port }}
+      gunicorn_args: {{ gunicorn_args }}
+      gunicorn_user: {{ gunicorn_user }}
+      log: {{ project }}/gunicorn.log
+      program_name: {{ gunicorn_user }}_gunicorn
+      extra_paths:
+        - {{ root }}/project
+        - {{ root }}/local_apps
+        
 /etc/supervisor/conf.d/{{ gunicorn_user }}_gunicorn.conf:
   file.managed:
     - source: salt://django_project/gunicorn_supervisor.conf
@@ -42,11 +58,12 @@ install-virtualenv:
       extra_paths:
         - {{ root }}/project
         - {{ root }}/local_apps
-          
+                  
 /home/{{ gunicorn_user }}/simple/venv:
    virtualenv:
      - managed
      - distribute: True
+     - runas: {{ gunicorn_user }}
      - require:
        - pip: install-virtualenv
        - file: /home/{{ gunicorn_user }}/simple
