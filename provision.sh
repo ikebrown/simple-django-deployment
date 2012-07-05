@@ -15,4 +15,5 @@ if [ ! -f /vagrant/identity ]; then
     cd /vagrant/ && cat identity.pub >> /home/vagrant/.ssh/authorized_keys
     sleep 1
 fi
-cd /vagrant/salt && fab -H 127.0.01 master:"127.0.0.1",t minion:"127.0.0.1",t -i /vagrant/identity
+cd /vagrant/ && fab -R vagrant config setup_all -i /vagrant/identity -f /vagrant/fabfile.py
+touch /vagrant/done

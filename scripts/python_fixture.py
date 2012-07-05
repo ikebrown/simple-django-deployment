@@ -51,6 +51,9 @@ tree = [
     ]
 ]
 
+Category.objects.all().delete()
+Product.objects.all().delete()
+
 def loopit(what, below):
     for item in what:
         obj = Category(name=item[0], slug=slugify(item[0]), active=True)
@@ -90,6 +93,6 @@ for i in lorem:
     category = Category.objects.order_by('?')[0]
     name = strip_tags(i).strip()[:20]
     slug = slugify(name)
-    product = Product(name=name, slug=slug, active=True, body=i, unit_price=Decimal(random.randint(50, 1000)), main_category=category)
+    product = Product(name=name, slug=slug, active=True, body=i, unit_price=Decimal(random.randint(50, 1000)), main_category=category, weigth_in_grams=250)
     product.save()
     product.additional_categories.add(category)
