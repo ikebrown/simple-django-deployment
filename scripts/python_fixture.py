@@ -7,6 +7,8 @@ from shop.models import Product
 from cms import api
 from django.utils.html import strip_tags
 from django.template.defaultfilters import slugify
+from decimal import Decimal
+import random
 
 User.objects.create_superuser('%(db_user)s', '%(db_user)s@%(servername)s', '%(db_password)s')
 
@@ -49,6 +51,9 @@ tree = [
     ]
 ]
 
+Category.objects.all().delete()
+Product.objects.all().delete()
+
 def loopit(what, below):
     for item in what:
         obj = Category(name=item[0], slug=slugify(item[0]), active=True)
@@ -88,6 +93,6 @@ for i in lorem:
     category = Category.objects.order_by('?')[0]
     name = strip_tags(i).strip()[:20]
     slug = slugify(name)
-    product = Product(name=name, slug=slug, active=True, body=i, main_category=category)
+    product = Product(name=name, slug=slug, active=True, body=i, unit_price=Decimal(random.randint(50, 1000)), main_category=category, weigth_in_grams=250)
     product.save()
     product.additional_categories.add(category)

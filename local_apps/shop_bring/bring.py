@@ -9,9 +9,12 @@ from django import forms
 
 from shop.util.decorators import on_method, shop_login_required
 from shop.models.ordermodel import OrderExtraInfo
+from shop.util.address import get_shipping_address_from_request
 
 import requests
 import simplejson
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as gettext
 
 tmp_choices = (
     (90, 'Fast'),
@@ -22,11 +25,20 @@ class BringChoicesForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
         choices = kwargs.pop('choices')
+        self.zipcode = kwargs.pop('zipcode')
         super(BringChoicesForm, self).__init__(*args, **kwargs)
         self.fields['shipment_method'].choices = choices
 
     shipment_method = forms.ChoiceField()
-
+    
+    def clean(self):
+        cleaned_data = super(BringChoicesForm, self).clean()
+        if not self.zipcode:
+            raise forms.ValidationError(gettext("Zipcode required to calculate shipping"))
+        else:
+            cleaned_data['zipcode'] = self.zipcode
+        return cleaned_data
+        
 class BringShipping(object):
 
     url_namespace = 'posten'
@@ -35,18 +47,21 @@ class BringShipping(object):
     def __init__(self, shop):
         self.shop = shop  # This is the shop reference, it allows this backend
         # to interact with it in a tidy way (look ma', no imports!)
+        
+    def get_zipcode(self, request, shipping_adress_form=False):
+        if not shipping_adress_form:
+            return get_shipping_address_from_request(request).zip_code
+        else:
+            return shipping_adress_form.data.get('ship-zip_code', None)
 
     def get_bound_form(self, request, items, shipping_adress_form=False, billing_adress_form=False):
-        if not shipping_adress_form:
-            zipcode = self.shop.get_order(request).shipping_address.zip_code
-        else:
-            zipcode = shipping_adress_form.data['ship-zip_code']
+        zipcode = self.get_zipcode(request, shipping_adress_form=shipping_adress_form)
             
-        choices = self.get_product_choices()[1]    
+        choices = self.get_product_choices(zipcode, items)[1]    
         if request.method == 'POST':
-            form = BringChoicesForm(request.POST, choices=choices)
+            form = BringChoicesForm(request.POST, choices=choices, zipcode=zipcode)
         else:
-             form = BringChoicesForm(choices=choices)   
+             form = BringChoicesForm(choices=choices, zipcode=zipcode)   
         return form
     
     def get_choice(self, product):
@@ -54,27 +69,49 @@ class BringShipping(object):
         price = product['Price']['PackagePriceWithoutAdditionalServices']['AmountWithVAT']
         return (product['ProductId'], u'%s %skr' % (name, price))
     
-    def get_product_choices(self):
-        url = 'http://fraktguide.bring.no/fraktguide/products/all.json'
-        params = {
-            'weightInGrams': 1500,
-            'from': 3242,
-            'to': 7600
-        }
-        data = simplejson.loads(requests.get(url, params=params).text)
-        form_choices = []
-        choices = {}
-        for product in data['Product']:
-            choices[product['ProductId']] = product
-            form_choices.append(self.get_choice(product))
-        return (choices, form_choices)
+    def get_item_params(self, items):
+        weight = 0
+        packets = []
+        for item in items:
+            if item.product.weight:
+                weight = weight + item.product.weight
+            else:
+                packets.append(item.product.dimensions)
+                
+        data = {}
+        data['weightInGrams'] = weight
+        if packets:
+            if len(packets) > 1:
+                for packet in packets:
+                    i = 1
+                    for k, v in packet.items():
+                        data['%s%s' % (k, i) ] = v
+                    i += 1
+            else:
+                data.update(packets[0])
+        return data
+                
     
-    def get_rate(self, products, choices, items):
+    def get_product_choices(self, tozip, items):
+        if not getattr(self, '_product_choices_cache', None):
+            url = 'http://fraktguide.bring.no/fraktguide/products/all.json'
+            params = self.get_item_params(items)
+            params.update({'from': '7650', 'to': tozip})
+            data = simplejson.loads(requests.get(url, params=params).text)
+            form_choices = []
+            choices = {}
+            for product in data['Product']:
+                choices[product['ProductId']] = product
+                form_choices.append(self.get_choice(product))
+            self._product_choices_cache = (choices, form_choices)
+        return self._product_choices_cache
+    
+    def get_rate(self, products, choices):
         product_type = choices['shipment_method']
         product = products[0][product_type]
         return Decimal(product['Price']['PackagePriceWithoutAdditionalServices']['AmountWithVAT'])
         
-    def get_info(self, products, choices, items):
+    def get_info(self, products, choices):
         product_type = choices['shipment_method']
         product = products[0][product_type]
         return product['GuiInformation']['ProductName']
@@ -85,17 +122,19 @@ class BringShipping(object):
         choices = request.session.get('shipping_choices', None)
         order = self.shop.get_order(request)
         items = order.items.all()
-        
-        products = self.get_product_choices()
+
         if choices:
-            rate = self.get_rate(products, choices, items)
-            info = self.get_info(products, choices, items)
+            products = self.get_product_choices(choices['zipcode'], items)
+            rate = self.get_rate(products, choices)
+            info = self.get_info(products, choices)
+            request.session['shipping_choices'] = None
         else:
             form = self.get_bound_form(request, items)
             if request.method == 'POST':
                 if form.is_valid():
-                    rate = self.get_rate(products, form.cleaned_data, items)
-                    info = self.get_info(products, choices, items)
+                    products = self.get_product_choices(form.cleaned_data['zipcode'], items)
+                    rate = self.get_rate(products, form.cleaned_data)
+                    info = self.get_info(products, form.cleaned_data)
     
         if rate:
             OrderExtraInfo.objects.create(order=order, text=info)

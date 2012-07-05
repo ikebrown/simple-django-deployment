@@ -12,7 +12,8 @@ class Product(CategoryProductBase):
     width_in_centimeters = models.PositiveIntegerField(null=True, blank=True)  
     height_in_centimeters = models.PositiveIntegerField(null=True, blank=True)
     
-    def get_dimensions(self):
+    @property
+    def dimensions(self):
         if self.lenght_in_centimeters and self.width_in_centimeters and self.height_in_centimeters:
             return {
                 'length': self.lenght_in_centimeters,
@@ -21,7 +22,8 @@ class Product(CategoryProductBase):
             }
         return None
         
-    def get_weight(self):
+    @property
+    def weight(self):
         return self.weigth_in_grams 
     
     def clean(self):

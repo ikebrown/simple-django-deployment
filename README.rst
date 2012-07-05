@@ -21,6 +21,6 @@ How to deploy simple-django-deployment.
 5. Open the directory in explorer, hold shift and right click, choose "Open command window here".
 6. In the command window do "vagrant box add lucid32 http://files.vagrantup.com/lucid32.box" and "vagrant up".
 7. Wait for provisioning to complete. Be very patient. If you are windows sellout like me, you could grab cygwin to tail -f output.txt in the deployment dir.
-8. Point your browser to http:://33.33.33.10/ or to http:://33.33.33.10/admin/, login using (username: simple / password: example123).
+8. Point your browser to http:://http://127.0.0.1:8080/ or to http://127.0.0.1:8080/admin/, login using (username: simple / password: example123).
 
-If deployment fails somehow you can login to 33.33.33.10 using putty (username: vagrant / password: vagrant).
+If deployment fails somehow you can login to 127.0.0.1:2222 using putty (username: vagrant / password: vagrant).

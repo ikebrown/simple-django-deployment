@@ -13,7 +13,7 @@ from shop.util.cart import get_or_create_cart
 
 class CheckoutSinglestepSelectionView(CheckoutSelectionView):
     
-    def handle_billingshipping_forms(self, js_enabled, shipping_adress_form, billing_address_form):
+    def handle_billingshipping_forms(self, js_enabled, update_only, shipping_adress_form, billing_address_form):
         all_valid = False
         
         billingshipping_form = \
@@ -37,13 +37,13 @@ class CheckoutSinglestepSelectionView(CheckoutSelectionView):
                     shipping_adress_form, billing_address_form)         
                 payment_choices_form = self.get_backend_choices_form('payment', payment_method, items,
                     shipping_adress_form, billing_address_form)         
-    
-                if shipping_choices_form:
-                    if shipping_choices_form.is_valid():
-                        self.request.session['shipping_choices'] = shipping_choices_form.cleaned_data
-                if payment_choices_form:
-                    if payment_choices_form.is_valid():
-                        self.request.session['payment_choices'] = payment_choices_form.cleaned_data
+                if not update_only:
+                    if shipping_choices_form:
+                        if shipping_choices_form.is_valid():
+                            self.request.session['shipping_choices'] = shipping_choices_form.cleaned_data
+                    if payment_choices_form:
+                        if payment_choices_form.is_valid():
+                            self.request.session['payment_choices'] = payment_choices_form.cleaned_data
                         
         return (billingshipping_form, shipping_choices_form, payment_choices_form)
        
@@ -70,7 +70,7 @@ class CheckoutSinglestepSelectionView(CheckoutSelectionView):
                     shipping=False)          
                           
             billingshipping_form, shipping_choices_form, payment_choices_form = \
-                self.handle_billingshipping_forms(js_enabled, shipping_form, billing_form)
+                self.handle_billingshipping_forms(js_enabled, update_only, shipping_form, billing_form)
                 
             self._forms = {
                 'shipping_address': shipping_form,
@@ -106,7 +106,7 @@ class CheckoutSinglestepSelectionView(CheckoutSelectionView):
         js_enabled = self.request.REQUEST.get('js_enabled', False)
         update_only = self.request.REQUEST.get('update_only', False)   
         forms = self.handle_forms(js_enabled=js_enabled, update_only=update_only)
-        if self.all_forms_valid() and not update_only:
+        if not update_only  and self.all_forms_valid():
             return HttpResponseRedirect(reverse('checkout_shipping'))
         return self.get(self, *args, **kwargs)
 
