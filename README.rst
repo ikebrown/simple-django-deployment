@@ -1,4 +1,6 @@
+============================================
 What does simple-django-deployment give you?
+============================================
 
 - Nginx
 - Gunicorn
@@ -13,6 +15,7 @@ What does simple-django-deployment give you?
 - Django-shop - with django-categories and searchable products - rudimentary shop so far but all parts present
 
 How to deploy simple-django-deployment.
+---------------------------------------
 
 1. Install VirtualBox.
 2. Install Ruby.
@@ -26,6 +29,7 @@ How to deploy simple-django-deployment.
 If deployment fails somehow you can login to 127.0.0.1:2222 using putty (username: vagrant / password: vagrant).
 
 How to push new changes?
+------------------------
 
 Login to 127.0.0.1:2222 using putty (username: vagrant / password: vagrant)
 
@@ -37,5 +41,15 @@ And isssue this command:
     fab -R vagrant -i identity config push reload
 
 All commands require ``fab -R vagrant -i identity config [command]`` to run properly
+
+How to update the design?
+-------------------------
+
+Open ``media/design.ai`` in Illustrator.
+
+Use save for web and devices, save images only to ``project/simple/static/simple/``.
+
+Push changes.
+
 
 
