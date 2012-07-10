@@ -9,7 +9,7 @@ class Category(ProductCategoryBase):
             return self.image
         else:
             try:
-                return self.get_descendants().exclude(image='')[-1]
+                return self.get_ancestors().exclude(image='')[-1]
             except IndexError:
                 return None
     
