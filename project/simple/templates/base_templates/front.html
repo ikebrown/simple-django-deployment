@@ -2,29 +2,7 @@
 
 {% load cms_tags %}
 {% block bodyclass %}front{% endblock bodyclass %}
-{% block top-block %}
-<div id="top-block" class="whitebg">
-    {% placeholder "top-block" %}
-</div>
-{% endblock top-block %}
 
-{% block col-wrappers %} 
-<div id="col-wrap" class="clearfix whitebg">
-    <div class="front-3cols">{% placeholder "col1" %}</div>
-    <div class="front-3cols">{% placeholder "col2" %}</div>
-    <div class="front-3cols">{% placeholder "col3" %}</div>
-</div>
-
-<div class="clearfix pad30 whitebg">
-    <div class="front-3cols">{% placeholder "col1-lnk" %}</div>
-    <div class="front-3cols">{% placeholder "col2-lnk" %}</div>
-    <div class="front-3cols">{% placeholder "col3-lnk" %}</div>
-</div>
-<div class="clearfix pad30 whitebg">
-    <div class="front-1col">{% placeholder "row2-col1" %}</div>
-</div>
-{% endblock col-wrappers %}
-
-            {% block footer %}
-                
-            {% endblock footer %}
+{% block right_content %}
+<p>Front</p>
+{% endblock right_content %}

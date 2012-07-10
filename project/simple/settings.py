@@ -171,6 +171,7 @@ from easy_thumbnails import defaults
 
 THUMBNAIL_PROCESSORS = defaults.PROCESSORS + (
     'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+    'simple.processors.bend_transparancy'
 )
 THUMBNAIL_DEBUG = True
 

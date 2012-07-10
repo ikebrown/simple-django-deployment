@@ -161,6 +161,7 @@ def setup_all():
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
     run_script('python_fixture.py')
+    put_default_media()
     
 def setup_instance():
     setup_webapp()
@@ -174,7 +175,8 @@ def setup_instance():
     configure_supervisor_gunicorn()
     configure_supervisor_celeryd()
     run_script('python_fixture.py')
-
+    put_default_media()
+    
 def setup_elasticsearch():
     sudo("aptitude update")
     sudo('aptitude -y install openjdk-6-jre curl')
@@ -348,3 +350,6 @@ def load_media():
     put("../fab_media.tar.gz", "/home/%(user)s/fab_media.tar.gz" % env)
     run("cd %(mediaroot)s && tar xzvf /home/%(user)s/fab_media.tar.gz" % env)
     run("rm /home/%(user)s/fab_media.tar.gz" % env)
+
+def put_default_media():
+    put("media/front_image.jpg", "%(mediaroot)s/front_image.jpg" % env)

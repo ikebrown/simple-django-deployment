@@ -3,68 +3,69 @@
 
 {% block outer %}
 
-            <div id="header">
-            {% block header %}
-            <a href="/" id="logolink"></a>
-            <div id="header-right">
-                <ul id="top-links">
-                {% if request.current_page %}
-    			    {% language_chooser "native" %}
-    			{% endif %}
-    			</ul>
-    			<form id="topsearchform" method="get" action="{% page_url "search" %}">
-                <p id="topsearch"><input type="text" name="q" value=""> <input type="submit" value="{% trans "Search" %}"></p>
-                </form>
-                <p id="topsearchformadvanced"><a href="{% page_url "search" %}">Advanced search</a></p>
-            </div>
-            {% endblock header %}
-            </div>
+    {% block header %}
+        <div id="header" class="clearfix">
+    		<form id="searchform" method="get" action="{% page_url "search" %}">
+            <p><input type="text" name="q" value=""> <input type="submit" value="{% trans "Search" %}"></p>
+            </form>
+            <ul id="languages">
+            {% if request.current_page %}
+    		    {% language_chooser "native" %}
+    		{% endif %}
+    		</ul>
+		</div>
+    {% endblock header %}
 
-			<ul id="menu" class="sf-menu main-menu">
-			{% show_menu 0 1 1 1 %}
-			</ul>
 
-            {% block menu %}
-            {% endblock menu %}
-            
-            {% block top-block %}
-            {% endblock top-block %}
-            
-           	{% block col-wrappers %} 
-            <div id="col-wrap" class="whitebg clearfix">
-            {% block cols %}
-                <div class="page-col1-68">{% block left-col %}{% placeholder "main" %}{% endblock left-col %}</div>
-                <div class="page-col2-29"><h1>&nbsp;</h1>
-                    {% block right-col %}
+    <div id="right_bar">
+        
+        <div id="right_top">
+        </div>
+        
+        <div id="right_content" class="clearfix">
+            {% block pre_right_content %}
+            {% load thumbnail %}
+            <img src="{% thumbnail 'front_image.jpg' 620x250 crop bend %}" style="position: relative; margin-top: -120px;">
+            {% endblock pre_right_content %}
+            {% block right_content %}
+            {% endblock right_content %}
+        </div>
+    
+        <div id="right_bottom">
+        </div>                
+    </div>
 
-{% load mptt_tags %}
-                    
-{% full_tree_for_model simple.Category as categorys %}
-
-<ul class="root">
-    {% recursetree categorys %}
-        <li>
-            <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
-            {% if not node.is_leaf_node %}
-                <ul class="children">
-                    {{ children }}
-                </ul>
-            {% endif %}
-        </li>
-    {% endrecursetree %}
-</ul>{% endblock right-col %}
-                </div>
-            {% endblock cols %}
-            </div>
-
-            {% block row2-cols %}
-            {% endblock row2-cols %}
-            
-            {% endblock col-wrappers %}
-
-            <div id="footer">
-            {% block footer %}
-
-            {% endblock footer %}
-            </div>
+    <div id="left_bar">
+        <div id="logo">
+        </div>
+        <div id="categorys" class="clearfix">
+            <ul>
+            {% load mptt_tags %}
+                                
+            {% full_tree_for_model simple.Category as categorys %}    
+            {% recursetree categorys %}
+                <li>
+                    <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            {{ children }}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+            </ul>
+        </div>
+        <div id="left_cart">
+        </div>   
+        <div id="left_bottom">
+        </div>   
+    </div>        
+    <div id="footer">
+    {% block footer %}
+    <ul id="menu">
+    	{% show_menu 0 1 1 1 %}
+    </ul>
+    {% endblock footer %}
+    </div>
+        
 {% endblock outer %}
