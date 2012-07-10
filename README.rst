@@ -24,3 +24,18 @@ How to deploy simple-django-deployment.
 8. Point your browser to http:://http://127.0.0.1:8080/ or to http://127.0.0.1:8080/admin/, login using (username: simple / password: example123).
 
 If deployment fails somehow you can login to 127.0.0.1:2222 using putty (username: vagrant / password: vagrant).
+
+How to push new changes?
+
+Login to 127.0.0.1:2222 using putty (username: vagrant / password: vagrant)
+
+And isssue this command:
+
+::
+    
+    cd /vagrant
+    fab -R vagrant -i identity config push reload
+
+All commands require ``fab -R vagrant -i identity config [command]`` to run properly
+
+
